@@ -14,9 +14,13 @@
         <MenuItems
           class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div class="py-1" >
-            <MenuItem v-slot="{ active }" v-for="(item,index) in options" :key="index">
-            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">{{ item.fruta }}</a>
-            </MenuItem>
+            <MenuItem
+            v-for="(fruta,index) in frutas"
+            v-slot="{ active }"
+            :key="index"
+            >
+            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">{{ fruta.nome }}</a>
+          </MenuItem>
             <form method="POST" action="#">
               <MenuItem v-slot="{ active }">
               <button type="submit"
@@ -42,11 +46,14 @@
     data() {
       return {
         isOpen: false,
-        options: [
+        frutas: [
+            { nome: 'maçã'
+            },
             {
-                1: 'maçã',
-                2: 'banana',
-                3: 'pera'
+              nome:'banana'
+            },
+            {
+              nome:'uva'
             }
 
         ]
