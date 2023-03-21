@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import TransferView from '@/views/TransferView'
+import TransactionView from '../views/TransactionView.vue'
 
 const routes = [
   {
@@ -15,6 +16,11 @@ const routes = [
   //   // which is lazy-loaded when the route is visited.
   //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   // }
+  {
+    path: '/transaction',
+    name: 'transaction',
+    component: TransactionView
+  }
 ]
 
 const router = createRouter({
