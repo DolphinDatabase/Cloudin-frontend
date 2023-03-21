@@ -1,15 +1,29 @@
 <template>
-<BasePage>
-    <DropDown/>
-</BasePage>
+    <BasePage>
+        <button type="button" @click="isOpenModal = true" class="bg-green-500">
+            teste
+        </button>
+        <ModalComponent v-if="isOpenModal"/>
+        
+    </BasePage>
 </template>
 
 <script>
-import DropDown from '@/components/Dropdown.vue';
+import ModalComponent from '@/components/Modal.vue';
 import BasePage from '@/components/layout/BasePage.vue';
 
 export default {
     name: "TransferView",
-    components: { BasePage, DropDown }
+    data() {
+        return {
+            isOpenModal: false
+        }
+    },
+    components: { BasePage, ModalComponent },
+    methods: {
+        openModal(e) {
+            console.log(e)
+        }
+    }
 }
 </script>
