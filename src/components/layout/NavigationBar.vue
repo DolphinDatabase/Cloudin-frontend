@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sidebar fixed group overflow-hidden left-0 top-0 z-10 h-screen w-[calc(3.73rem)] border-r border-gray-300/40 bg-green-500 hover:w-56 hover:shadow-2xl"
+    class="sidebar fixed group overflow-hidden left-0 top-0 z-10 h-screen w-[calc(3.73rem)] border-r border-gray-300/40 bg-green-500 lg:hover:w-56 sm:hover:w-44 hover:shadow-2xl"
   >
     <div class="h-full flex flex-col justify-between">
       <div>
@@ -23,12 +23,12 @@
                 v-for="(item, index) in navigation"
                 :key="index"
                 :href="item.href"
-                class="block py-1 w-[52px]  hover:w-full"
+                class="block py-1 w-[52px] hover:w-full"
               >
-                <div class="w-max flex items-center p-2 gap-4 rounded-full bg-white text-green-500">
+                <div class="w-max flex items-center p-2 gap-4 rounded-full bg-white text-green-500 sm:text-sm lg:text-lg">
                   <component
                     :is="item.icon"
-                    class="h-5 w-5 ml-2 mr-4"
+                    class="h-5 w-5 ml-2 mr-4 sm:mr-1 lg:mr-4"
                   />
                   <span>{{ item.label }}</span></div>
               </a>
