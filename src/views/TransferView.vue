@@ -4,13 +4,14 @@
             teste
         </button>
         <ModalComponent v-if="isOpenModal"/>
-        
+        <table-check></table-check>
     </BasePage>
 </template>
 
 <script>
 import ModalComponent from '@/components/Modal.vue';
 import BasePage from '@/components/layout/BasePage.vue';
+import TableCheck from '@/components/TableCheck.vue';
 
 export default {
     name: "TransferView",
@@ -19,7 +20,7 @@ export default {
             isOpenModal: false
         }
     },
-    components: { BasePage, ModalComponent },
+    components: { BasePage, ModalComponent, TableCheck },
     methods: {
         openModal(e) {
             console.log(e)
