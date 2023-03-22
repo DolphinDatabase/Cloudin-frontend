@@ -7,7 +7,16 @@ module.exports = {
         green: {
           500: '#96DA84'
         },
-        gray: { 100: '#F2F2F2', 200: 'RGBA(0,0,0,0.4)', 300: '#787878' },
+        gray: { 
+          100: '#F2F2F2', 
+          200: 'RGBA(0,0,0,0.4)', 
+          300: '#787878' 
+        },
+        white: {
+          100: '#FFFFFF',
+          200: '#F8F8F8',
+
+        },
       },
       fontFamily: {
         'nunito': ['Nunito', 'sans-serif']

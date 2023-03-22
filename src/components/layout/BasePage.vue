@@ -1,9 +1,25 @@
-<template>  
+<template>
   <div id="page">
     <navigation-bar />
-    <div class="2xl:container mx-auto space-y-6">
-      <div class="px-6 lg:px-96">
-        <slot />
+    <div class="container mx-auto space-y-6 h-full">
+      <div class="px-[72px] sm:px-48 lg:px-64 ">
+        <p class="text-md lg:text-2xl text-green-500 font-bold py-10">
+          {{ title }}
+        </p>
+        <div class="flex justify-between">
+          <p class="text-gray-300 tracking-4 text-xs lg:text-base">
+            {{ info }}
+          </p>
+          <button
+            type="button"
+            class="flex items-center px-2 py-1 gap-1 border-none rounded-lg bg-green-500 text-white-100 w-[48px] overflow-hidden md:w-28 md:overflow-visible"
+          >
+          <div class="">
+            <PlusSmallIcon class="h-5 w-5" /> 
+          </div>
+            <span class="text-sm lg:text-base"> Adicionar</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -11,9 +27,26 @@
 
 <script>
 import NavigationBar from './NavigationBar.vue';
-
+import { PlusSmallIcon } from '@heroicons/vue/24/outline'
 export default {
-    name: "BasePage",
-    components: { NavigationBar }
+  name: "BasePage",
+  components: { NavigationBar, PlusSmallIcon },
+  props: {
+    title: {
+      required: true,
+      type: String
+    },
+    info: {
+      required: true,
+      type: String
+    }
+  },
 }
 </script>
+
+<style scoped>
+#page {
+  background-color: #F8F8F8;
+  height: 100vh;
+}
+</style>

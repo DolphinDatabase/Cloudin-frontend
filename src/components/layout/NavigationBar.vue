@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sidebar fixed group overflow-hidden left-0 top-0 z-10 h-screen w-[calc(3.73rem)] border-r border-gray-300/40 bg-green-500 lg:hover:w-56 sm:hover:w-44 hover:shadow-2xl"
+    class="sidebar fixed group overflow-hidden left-0 top-0 z-10 h-screen w-[calc(3.73rem)] bg-green-500 lg:hover:w-56 hover:w-44"
   >
     <div class="h-full flex flex-col justify-between">
       <div>
@@ -9,9 +9,9 @@
             href=""
             class="block w-max px-2.5"
           >
-            <img
-              src="@/assets/logo/logo-negativo2.svg"
-              class="w-25"
+            
+            <img src="@/assets/logo/logo-branco.svg"
+              class="w-[200px]"
               alt=""
             >
           </a>
@@ -25,10 +25,10 @@
                 :href="item.href"
                 class="block py-1 w-[52px] hover:w-full"
               >
-                <div class="w-max flex items-center p-2 gap-4 rounded-full bg-white text-green-500 sm:text-sm lg:text-lg">
+                <div class="w-max flex items-center p-2 gap-4 rounded-full bg-white-200 text-green-500 text-sm lg:text-lg">
                   <component
                     :is="item.icon"
-                    class="h-5 w-5 ml-2 mr-4 sm:mr-1 lg:mr-4"
+                    class="h-5 w-5 ml-2 mr-2 lg:mr-4"
                   />
                   <span>{{ item.label }}</span></div>
               </a>

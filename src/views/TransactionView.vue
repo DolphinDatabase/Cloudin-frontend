@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h1 class="text-green-500">
-      Transferências
-    </h1>
+    
     <div class="flex justify-between">
       <p>Configure suas transferências e analise os metadados</p>
       <button>+    Adicionar </button>
