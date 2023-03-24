@@ -12,13 +12,16 @@
           </p>
           <button
             type="button"
-            class="flex items-center px-2 py-1 gap-1 border-none rounded-lg bg-green-500 text-white-100 w-[48px] overflow-hidden md:w-28 md:overflow-visible"
+            class="flex items-center px-2 py-1 gap-2 border-none rounded-lg bg-green-500 text-white-100 w-[36px] sm:w-[48px] overflow-hidden md:w-28 md:overflow-visible"
           >
-          <div class="">
+          <div>
             <PlusSmallIcon class="h-5 w-5" /> 
           </div>
             <span class="text-sm lg:text-base"> Adicionar</span>
           </button>
+        </div>
+        <div class="mt-8">
+          <slot></slot>
         </div>
       </div>
     </div>
