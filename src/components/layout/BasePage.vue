@@ -10,18 +10,20 @@
           <p class="text-gray-300 tracking-4 text-xs lg:text-base">
             {{ info }}
           </p>
+
           <button
+            v-if="showButton"
             type="button"
             class="flex items-center px-2 py-1 gap-2 border-none rounded-lg bg-green-500 text-white-100 w-[36px] sm:w-[48px] overflow-hidden md:w-28 md:overflow-visible"
           >
-          <div>
-            <PlusSmallIcon class="h-5 w-5" /> 
-          </div>
+            <div>
+              <PlusSmallIcon class="h-5 w-5" />
+            </div>
             <span class="text-sm lg:text-base"> Adicionar</span>
           </button>
         </div>
         <div class="mt-8">
-          <slot></slot>
+          <slot />
         </div>
       </div>
     </div>
@@ -42,6 +44,10 @@ export default {
     info: {
       required: true,
       type: String
+    },
+    showButton: {
+      required: true,
+      type: Boolean
     }
   },
 }
