@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import TransferView from '@/views/TransferView'
-import TransactionView from '../views/TransactionView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 
 const routes = [
@@ -13,11 +12,6 @@ const routes = [
     path: '/transferencia',
     name: 'transferencia',
     component: TransferView
-  },
-  {
-    path: '/transaction',
-    name: 'transaction',
-    component: TransactionView
   }
 ]
 
