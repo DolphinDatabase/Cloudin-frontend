@@ -84,15 +84,14 @@ export default {
     DialogPanel,
     DialogTitle
   },
-  // props:{
-  //     isOpenModal: {
-  //         required: true,
-  //         type: Boolean
-  //     }
-  // },
+  props:{
+      title: {
+          required: true,
+          type: Boolean
+      }
+  },
   data() {
     return {
-      title: 'EXEMPLO',
       open: true
     }
   }
