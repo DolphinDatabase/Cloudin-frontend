@@ -3,8 +3,12 @@
     title="Transferências"
     info="Realize suas transferências e analise os metadados"
     :show-button="true"
+    @clickPageButton="()=>{this.transfers=1}"
   >
     <div class="flex justify-center align-center">
+      <div class="contents">
+        <CardCollapseNew @newTansaction="(data)=>{}" @newTansactionStatus="(data)=>{}"/>
+      </div>
       <div v-if="transfers == 0">
         <img
           src="@/assets/adicionar.svg"
@@ -17,7 +21,7 @@
         </div>
       </div>
       <div v-else>
-        <CardCollapseNew/>
+        <p>listar transações</p>
       </div>
     </div>
   </BasePage>
@@ -32,7 +36,6 @@ export default {
     components: {
         BasePage,
         CardCollapseNew
-
     },
     data() {
         return {
