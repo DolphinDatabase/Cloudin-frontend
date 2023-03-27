@@ -6,11 +6,6 @@
                 <p>Google Drive</p>
             </button>
         </card-component>
-        <ul v-if="isAuth">
-            <li v-for="f in files" :key="f.id">
-                {{ f.name + " (" + f.id + ")" }}
-            </li>
-        </ul>
     </div>
 </template>
 
@@ -32,7 +27,11 @@ export default {
         if (window.localStorage.getItem("auth")) {
             this.auth = true
             this.listFolders()
+            this.refreshToken()
         }
+    },
+    created() {
+        setInterval(this.refreshToken, 3599000) //a cada 3599s
     },
     methods: {
         login() {
@@ -45,10 +44,10 @@ export default {
                             console.log(response)
                             var data = {
                                 code: response.code,
-                                client_id: '532089225272-1im33klerc0hmvspgo6mh08aobithavt.apps.googleusercontent.com',
-                                client_secret: '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',
-                                redirect_uri:"http://localhost:8080",
-                                grant_type: 'authorization_code'
+                                client_id: "532089225272-1im33klerc0hmvspgo6mh08aobithavt.apps.googleusercontent.com",
+                                client_secret: "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",
+                                redirect_uri: "http://localhost:8080",
+                                grant_type: "authorization_code"
                             }
                             axios.post("https://oauth2.googleapis.com/token", data)
                                 .then(res => {
@@ -62,12 +61,16 @@ export default {
         async refreshToken() {
             var data = {
                 refresh_token: JSON.parse(window.localStorage.getItem("auth")).refresh_token,
-                client_id: '532089225272-1im33klerc0hmvspgo6mh08aobithavt.apps.googleusercontent.com',
-                client_secret: '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',
-                grant_type:"refresh_token"
+                client_id: "532089225272-1im33klerc0hmvspgo6mh08aobithavt.apps.googleusercontent.com",
+                client_secret: "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",
+                grant_type: "refresh_token"
             }
             const res = await axios.post("https://oauth2.googleapis.com/token", data)
+
             console.log(res.data)
+            console.log(data.refresh_token)
+            localStorage.setItem("credentials", JSON.stringify(data.refresh_token))
+
         },
         async listFolders() {
             const auth = JSON.parse(window.localStorage.getItem("auth"))
@@ -76,10 +79,9 @@ export default {
                     this.files = res.data.files
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.error(err)
                 })
         }
-
-    }
+    },
 }
 </script>
