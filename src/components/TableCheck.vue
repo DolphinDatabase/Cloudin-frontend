@@ -1,19 +1,16 @@
 <template> 
   <div class="card">
-    <div class="card-heard">
-      <label class="form-checkbox">
-        <input
-          v-model=" select_all"
-          type="checkbox"
-          @click="select"
-        > Select All         
-      </label>
-    </div>
     <div class="card-body">
-      <table class="table">
-        <thead>
+      <table class="mt-1 w-[100%]">
+        <thead class="border-solid border-b-2 border-black">
           <tr>
-            <th>Id</th>
+            <th>
+               <input
+                v-model=" select_all"
+                type="checkbox"
+                @click="select"
+              >
+            </th>
             <th>Nome do arquivo</th>
             <th>Tamanho</th>
           </tr>
@@ -30,9 +27,8 @@
                 :value="d.id"
               >
             </td>
-            <td> {{ d.id }}</td>
-            <td> {{ d.Arquivo }}</td>
-            <td>{{ d.Tamanho }}</td>
+            <td> {{ d.name }}</td>
+            <td>{{(d.size)?d.size:"-" }}</td>
           </tr>
         </tbody>
       </table>

@@ -15,7 +15,9 @@
             v-if="showButton"
             type="button"
             class="flex items-center px-2 py-1 gap-2 border-none rounded-lg bg-green-500 text-white-100 w-[36px] sm:w-[48px] overflow-hidden md:w-28 md:overflow-visible"
+            @click="()=>{this.$emit('clickPageButton')}"
           >
+
             <div>
               <PlusSmallIcon class="h-5 w-5" />
             </div>
