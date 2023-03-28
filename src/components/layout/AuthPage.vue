@@ -17,17 +17,19 @@
       >{{ item.label }}</a>
     </div> -->
     <GoogleLogin/>
+    <S3Login/>
   </div>
 </template>
 
 <script>
 import google from '@/assets/auth/Google.svg'
 import s3 from '@/assets/auth/s3.svg'
-import GoogleLogin from '../auth/GoogleLogin.vue';
+import GoogleLogin from '../auth/GoogleLogin.vue'
+import S3Login from '../auth/S3Login.vue'
 
 export default {
     name: "AuthPage",
-    components: { GoogleLogin },
+    components: { GoogleLogin, S3Login },
     data() {
         return {
             auths: [
