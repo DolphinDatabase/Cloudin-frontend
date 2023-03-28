@@ -1,24 +1,18 @@
 <template>
-  <div class="">
-    <card-component>
-      <button
-        type="button"
-        @click="login()"
-      >
-        <img
-          src="@/assets/auth/Google.svg"
-          class="w-7 mr-2"
-        >
-        <p>Google Drive</p>
-      </button>
-    </card-component>
-  </div>
+    <div class="">
+
+        <button type="button" @click="login()"><card-component>
+                <img src="@/assets/auth/Google.svg" class="w-7 mr-2">
+                <p class="cursor-pointer">Autentique com o Google Drive</p>
+            </card-component>
+        </button>
+
+    </div>
 </template>
 
 <script>
 import { googleSdkLoaded } from 'vue3-google-login';
 import axios from 'axios';
-import google from '@/assets/auth/Google.svg'
 import CardComponent from '@/components/CardComponent.vue'
 
 export default {
@@ -26,17 +20,11 @@ export default {
     components: {
         CardComponent
     },
-    data() {
-        google
-    },
     mounted() {
         if (window.localStorage.getItem("auth")) {
             this.auth = true
             this.listFolders()
-            this.refreshToken()
         }
-    },
-    created() {
         setInterval(this.refreshToken, 3599000) //a cada 3599s
     },
     methods: {
@@ -58,9 +46,9 @@ export default {
                             axios.post("https://oauth2.googleapis.com/token", data)
                                 .then(res => {
                                     window.localStorage.setItem("auth", JSON.stringify(res.data))
-                                    window.location.reload()
+                                    this.refreshToken()
                                 })
-                                
+
                         }
                     }).requestCode()
                 })
@@ -77,7 +65,7 @@ export default {
 
             console.log(res.data)
             console.log(data.refresh_token)
-            localStorage.setItem("credentials", JSON.stringify(data.refresh_token))
+            localStorage.setItem("google", data.refresh_token)
 
         },
         async listFolders() {
