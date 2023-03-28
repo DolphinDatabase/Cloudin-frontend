@@ -16,8 +16,8 @@
         class="w-10 h-10 mr-4"
       >{{ item.label }}</a>
     </div> -->
-    <GoogleLogin/>
-    <S3Login/>
+    <GoogleLogin />
+    <S3Login />
   </div>
 </template>
 
