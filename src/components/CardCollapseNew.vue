@@ -41,6 +41,7 @@
         </div>
       </DisclosurePanel>
     </Disclosure>
+    <TransactionCard/>
   </div>
   <ModalComponent
     title="Selecione Arquivos para a transferência"
