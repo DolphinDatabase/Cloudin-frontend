@@ -52,7 +52,9 @@ export default {
                             axios.post("https://oauth2.googleapis.com/token", data)
                                 .then(res => {
                                     window.localStorage.setItem("auth", JSON.stringify(res.data))
+                                    window.location.reload()
                                 })
+                                
                         }
                     }).requestCode()
                 })
@@ -81,7 +83,10 @@ export default {
                 .catch(err => {
                     console.error(err)
                 })
-        }
+        },
+        // refreshPage() {
+        //     window.localSt
+        // }
     },
 }
 </script>
