@@ -84,9 +84,6 @@ export default {
                     console.error(err)
                 })
         },
-        // refreshPage() {
-        //     window.localSt
-        // }
     },
 }
 </script>
