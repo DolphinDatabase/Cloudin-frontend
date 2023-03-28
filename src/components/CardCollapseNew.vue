@@ -61,6 +61,7 @@ import { ChevronUpIcon } from '@heroicons/vue/20/solid'
 import DropDown from '@/components/Dropdown.vue'
 import api from '@/services/api'
 import TableCheck from '@/components/TableCheck.vue'
+import TransactionCard from './TransactionCard.vue'
 export default {
   name: "CardCollapseNew",
   components: {
@@ -70,7 +71,8 @@ export default {
     ChevronUpIcon,
     DropDown,
     ModalComponent,
-    TableCheck
+    TableCheck,
+    TransactionCard
   },
   data() {
     return {
@@ -78,7 +80,8 @@ export default {
       destiny: '',
       modal:false,
       selected:[],
-      files:[]
+      files:[],
+      showDataDiv: true
     }
   },
   methods: {
@@ -104,6 +107,20 @@ export default {
       }})
       .then((res)=>{
         this.$emit("newTansactionStatus",res)
+        // Criando a nova div
+        const div = new TransactionCard
+        
+        // Adicionando o conteúdo na div
+        div.innerHTML = `<p>Nova transação:</p>
+                          <p>Origem: ${this.origin}</p>
+                          <p>Destino: ${this.destiny}</p>
+                          <p>Arquivos:</p>`
+        selected.forEach((file) => {
+          div.innerHTML += `<p>- ${file.file_name}</p>`
+        })
+        
+        // Adicionando a nova div ao DOM
+        document.body.appendChild(div)
       })
     },
     async listFiles(){
