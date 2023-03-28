@@ -1,33 +1,57 @@
 <template>
   <div class="w-[100%]">
-  <Disclosure v-slot="{ open }">
-    <DisclosureButton
-      class="flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium">
-      <span>Preencha os campos cuidadosamente</span>
-      <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-black" />
-    </DisclosureButton>
-    <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-gray-100" static>
-      <div class="flex justify-between mb-2">
-        <div>
-          <p>De:</p>
-          <DropDown :list="[{ nome: 'Google' }, { nome: 'S3' }]" @onSelect="(e) => { origin = e }" />
+    <Disclosure v-slot="{ open }">
+      <DisclosureButton
+        class="flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium"
+      >
+        <span>Preencha os campos cuidadosamente</span>
+        <ChevronUpIcon
+          :class="open ? 'rotate-180 transform' : ''"
+          class="h-5 w-5 text-black"
+        />
+      </DisclosureButton>
+      <DisclosurePanel
+        class="px-12 pt-4 pb-4 text-sm bg-gray-100"
+        static
+      >
+        <div class="flex justify-between mb-2">
+          <div>
+            <p>De:</p>
+            <DropDown
+              :list="[{ nome: 'Google' }, { nome: 'S3' }]"
+              @onSelect="(e) => { origin = e }"
+            />
+          </div>
+          <ArrowSmallRightIcon />
+          <div>
+            <p>De:</p>
+            <DropDown
+              :list="[{ nome: 'Google' }, { nome: 'S3' }]"
+              @onSelect="(e) => { destiny = e }"
+            />
+          </div>
         </div>
-        <ArrowSmallRightIcon />
-        <div>
-          <p>De:</p>
-          <DropDown :list="[{ nome: 'Google' }, { nome: 'S3' }]" @onSelect="(e) => { destiny = e }" />
+        <div class="flex justify-center">
+          <button
+            class="bg-green-500 text-white font-bold py-2 px-4 rounded"
+            @click="chooseFiles()"
+          >
+            Escolher arquivos
+          </button>
         </div>
-      </div>
-      <div class="flex justify-center">
-        <button class="bg-green-500 text-white font-bold py-2 px-4 rounded" @click="chooseFiles()">
-          Escolher arquivos
-        </button>
-      </div>
-    </DisclosurePanel>
-  </Disclosure>
+      </DisclosurePanel>
+    </Disclosure>
   </div>
-  <ModalComponent title="Selecione Arquivos para a transferência" :open="this.modal" @closeModal="()=>{this.modal=false}" @submitData="()=>{this.submitTransaction()}">
-    <TableCheck ref="table" :data="this.files"/>
+  <ModalComponent
+    title="Selecione Arquivos para a transferência"
+    :open="modal"
+    @closeModal="()=>{modal=false}"
+    @submitData="()=>{submitTransaction()}"
+  >
+    <TableCheck
+      ref="table"
+      :data="files"
+    />
   </ModalComponent>
 </template>
 <script>

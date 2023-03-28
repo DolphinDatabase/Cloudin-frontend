@@ -1,12 +1,18 @@
 <template>
-    <div class="">
-        <card-component>
-            <button type="button" @click="login()">
-                <img src="@/assets/auth/Google.svg" class="w-7 mr-2">
-                <p>Google Drive</p>
-            </button>
-        </card-component>
-    </div>
+  <div class="">
+    <card-component>
+      <button
+        type="button"
+        @click="login()"
+      >
+        <img
+          src="@/assets/auth/Google.svg"
+          class="w-7 mr-2"
+        >
+        <p>Google Drive</p>
+      </button>
+    </card-component>
+  </div>
 </template>
 
 <script>

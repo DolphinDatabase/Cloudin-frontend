@@ -5,7 +5,7 @@
         <thead class="border-solid border-b-2 border-black">
           <tr>
             <th>
-               <input
+              <input
                 v-model=" select_all"
                 type="checkbox"
                 @click="select"
@@ -28,7 +28,7 @@
               >
             </td>
             <td> {{ d.name }}</td>
-            <td>{{(d.size)?d.size:"-" }}</td>
+            <td>{{ (d.size)?d.size:"-" }}</td>
           </tr>
         </tbody>
       </table>

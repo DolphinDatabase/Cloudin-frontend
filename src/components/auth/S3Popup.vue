@@ -1,22 +1,30 @@
 <template>
-    <div class="popup-background" @click="closePopup()"/>
-    <div class="popup">
-        <img src="@/assets/auth/s3.svg" class="w-20 mr-10">
+  <div
+    class="popup-background"
+    @click="closePopup()"
+  />
+  <div class="popup">
+    <img
+      src="@/assets/auth/s3.svg"
+      class="w-20 mr-10"
+    >
 
-        <label>AWS Access Key Id</label>
-        <input v-model="s3Auth.awsAccessKeyId"/>
+    <label>AWS Access Key Id</label>
+    <input v-model="s3Auth.awsAccessKeyId">
 
-        <label>AWS Secret Access Key</label>
-        <input v-model="s3Auth.awsSecretAccessKey"/>
+    <label>AWS Secret Access Key</label>
+    <input v-model="s3Auth.awsSecretAccessKey">
 
-        <label>AWS Region Name</label>
-        <input v-model="s3Auth.awsRegionName"/>
+    <label>AWS Region Name</label>
+    <input v-model="s3Auth.awsRegionName">
 
-        <label>S3 Bucket Name</label>
-        <input v-model="s3Auth.s3BucketName"/>
+    <label>S3 Bucket Name</label>
+    <input v-model="s3Auth.s3BucketName">
 
-        <button @click="saveS3Auth()">Salvar</button>
-    </div>
+    <button @click="saveS3Auth()">
+      Salvar
+    </button>
+  </div>
 </template>
 
 <script>
