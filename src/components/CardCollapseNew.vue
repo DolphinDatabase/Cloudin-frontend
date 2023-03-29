@@ -33,7 +33,7 @@
         </div>
         <div class="flex justify-center">
           <button
-            class="bg-green-500 text-white font-bold py-2 px-4 rounded"
+            class="bg-green-500 text-white-100 font-bold py-2 px-4 rounded"
             @click="chooseFiles()"
           >
             Escolher arquivos
@@ -42,6 +42,8 @@
       </DisclosurePanel>
     </Disclosure>
     <TransactionCard/>
+    <img src="@/assets/emAndamento.svg">
+    <img src="@/assets/erro.svg">
   </div>
   <ModalComponent
     title="Selecione Arquivos para a transferência"
