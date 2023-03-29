@@ -27,16 +27,16 @@
       >
 
       <label>AWS Access Key Id</label>
-      <input-component v-model="s3Auth.awsAccessKeyId" />
+      <input v-model="s3Auth.awsAccessKeyId" />
 
       <label>AWS Secret Access Key</label>
-      <input-component v-model="s3Auth.awsSecretAccessKey" />
+      <input v-model="s3Auth.awsSecretAccessKey" />
 
       <label>AWS Region Name</label>
-      <input-component v-model="s3Auth.awsRegionName" />
+      <input v-model="s3Auth.awsRegionName" />
 
       <label>S3 Bucket Name</label>
-      <input-component v-model="s3Auth.s3BucketName" />
+      <input v-model="s3Auth.s3BucketName" />
 
       <button
         class="bg-green-500 text-white-100 font-bold py-2 px-4 rounded self-center"
@@ -49,11 +49,9 @@
 </template>
 
 <script>
-import InputComponent from '../InputComponent.vue';
 
 export default {
     name: "S3Popup",
-    components: { InputComponent },
     data() {
         return {
             s3Auth: {
