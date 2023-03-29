@@ -58,7 +58,7 @@
               .then((res) => {
                   this.auth = res.data
                   this.auth.expires_in = new Date().getTime() + res.data.expires_in * 1_000;
-                  store.commit('setGoogleAuth', {
+                  this.$store.commit('setGoogleAuth', {
                       access_token: this.auth.access_token,
                       expires_in: this.auth.expires_in
                   });
@@ -94,7 +94,7 @@
           },
           listFolders(){
               axios.get("https://www.googleapis.com/drive/v3/files", 
-              { headers: { Authorization: `Bearer ${store.getters.googleToken}`} })
+              { headers: { Authorization: `Bearer ${this.$store.getters.googleToken}`} })
               .then((res) => {
                   this.files = res.data.files
                   console.log(this.files)
