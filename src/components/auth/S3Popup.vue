@@ -5,7 +5,7 @@
       @click="closePopup()"
     />
     <div class="popup border-d rounded-lg z-[100] p-8 flex flex-col bg-white-200">
-      <div class="flex justify-end">
+      <div class="flex justify-end cursor-pointer" @click="closePopup()">
         <XMarkIcon class="h-5 w-5 text-black self-end" />
       </div>
       <img
