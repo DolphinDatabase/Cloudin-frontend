@@ -63,7 +63,12 @@ import { ChevronUpIcon } from '@heroicons/vue/20/solid'
 import DropDown from '@/components/Dropdown.vue'
 import api from '@/services/api'
 import TableCheck from '@/components/TableCheck.vue'
+<<<<<<< HEAD
 
+=======
+import TransactionCard from './TransactionCard.vue'
+import notify from '@/utils/notification'
+>>>>>>> 867d08c25fe207ef1e43bc8f422098eb6c56d4f9
 export default {
   name: "CardCollapseNew",
   components: {
@@ -101,6 +106,7 @@ export default {
         destiny:this.destiny,
         files:selected
       }
+<<<<<<< HEAD
       var headers = {
         headers:{
         origin_token:"",
@@ -129,6 +135,22 @@ export default {
           }
         }
 
+=======
+      api.post("/transaction/",data,{headers:{
+        origin_token:"AKIA4VVR7RPQYTILT3MO LXYAbeTX6zwfoCdGh4LiAZVEjPwEMvC6ICEBSnDi us-east-1 cloudin-bucket",
+        destiny_token:"ya29.a0Ael9sCNf4X7ij_1MnV4OX0FgKspX3EaDKbWF-gJ_wyvq0H4CNPr2oWSoux2wgu7-Y2lzjhXBlvQq9ad9ippvr5QDdxdacyXFpV2a_lAJgUamScnHJeMTHuodjJg3SrBPlfmuJfPbxehtwYIS7XnDta7xBmzaaCgYKAQcSARASFQF4udJhqoIAed3lWkDozkgGbCx5fA0163",
+        application:"123123"
+      }})
+      .then((res)=>{
+        for(let l in res.data){
+          if("error" in res.data[l]){
+            notify({icon:"erro",text:"Falha na transação"})
+          }else{
+            notify({icon:"concluido",text:"Transação realizada com sucesso"})
+          }
+        }
+        console.log(res);
+>>>>>>> 867d08c25fe207ef1e43bc8f422098eb6c56d4f9
       })
     },
     async listFiles(){
