@@ -90,7 +90,8 @@ export default {
     }
   },
   mounted(){
-    var aplication_id = window.localStorage.getItem("id")
+    // var aplication_id = window.localStorage.getItem("id")
+    var aplication_id = "123123"
     var get_transaction_list_url = "/transaction/" + aplication_id
     api.get(get_transaction_list_url)
       .then((res)=>{
@@ -117,7 +118,8 @@ export default {
         headers:{
         origin_token:"",
         destiny_token:"",
-        application: window.localStorage.getItem("id")
+        // application: window.localStorage.getItem("id")
+        application: "123123"
       }}
       let tokenHandler = {
         "google" : () => {
@@ -128,6 +130,7 @@ export default {
           return `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
         }
       }
+      console.log(this.$store.getters.getGoogleAuth)
       headers.origin_token = tokenHandler[this.origin]()
       headers.destiny_token = tokenHandler[this.destiny]()
       this.transactions.push({origin:this.origin, destiny:this.destiny, status:"Em andamento"})
@@ -135,11 +138,20 @@ export default {
       .then((res)=>{
         // Criando a nova div
         console.log(res)
+        console.log(res.data)
       })
     },
     async listFiles(){
+      var tk = ""
+      if(this.origin=="google"){
+          tk +=  this.$store.getters.getGoogleAuth
+      } else if (this.origin=="s3"){
+        let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
+          tk +=  `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
+          
+      }
       const res = await api.get("/"+this.origin+"/list",{headers:{
-        token:"AKIA4VVR7RPQYTILT3MO LXYAbeTX6zwfoCdGh4LiAZVEjPwEMvC6ICEBSnDi us-east-1 cloudin-bucket"
+        token:tk
       }})
       this.files = res.data.result
     },

@@ -1,12 +1,12 @@
 <template>
   <div :class="myClass">
     <img
-      src="@/assets/auth/Google.svg"
+      :src="myOrigin"
       alt=""
     >
     <p>-></p>
     <img
-      src="@/assets/auth/s3.svg"
+      :src="myDestiny"
       alt=""
     >
     <p class="transaction-status">
@@ -20,7 +20,10 @@ export default {
     name: "TransactionCard",
     data(){
       return{
-        myClass:"flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center card-andamento"
+        myClass:"flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center card-andamento",
+        myOrigin: "",
+        myDestiny: ""
+        
       }
     },
     props:{
@@ -33,6 +36,18 @@ export default {
       this.myClass.replace("card-andamento", "card-concluido")
     } else if (this.status === "Falha") {
       this.myClass.replace("card-andamento", "card-falha")
+    }
+
+    if (this.origin === "s3") {
+      this.myOrigin = require("@/assets/auth/s3.svg");
+    } else {
+      this.myOrigin = require("@/assets/auth/Google.svg");
+    }
+
+    if (this.destiny === "google") {
+      this.myDestiny = require("@/assets/auth/Google.svg");
+    } else {
+      this.myDestiny = require("@/assets/auth/s3.svg");
     }
   }
 }
