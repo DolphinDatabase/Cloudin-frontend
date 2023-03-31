@@ -10,7 +10,10 @@
           <p class="text-gray-300 tracking-4 text-xs lg:text-base">
             {{ info }}
           </p>
+<<<<<<< HEAD
+=======
 
+>>>>>>> 867d08c25fe207ef1e43bc8f422098eb6c56d4f9
           <button
             v-if="showButton"
             type="button"
@@ -34,6 +37,7 @@
 <script>
 import NavigationBar from './NavigationBar.vue';
 import { PlusSmallIcon } from '@heroicons/vue/24/outline'
+
 export default {
   name: "BasePage",
   components: { NavigationBar, PlusSmallIcon },
@@ -51,6 +55,9 @@ export default {
       type: Boolean
     }
   },
+  methods: {
+    
+  }
 }
 </script>
 

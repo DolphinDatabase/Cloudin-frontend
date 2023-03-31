@@ -33,6 +33,7 @@ import BasePage from '@/components/layout/BasePage.vue';
 import CardCollapseNew from '@/components/CardCollapseNew.vue'
 import TransactionCard from '@/components/TransactionCard.vue'
 import api from '@/services/api';
+import notify from '@/utils/notification'
 export default {
   name: "TransferView",
   components: {
@@ -60,6 +61,11 @@ export default {
       this.transactions.push(data)
     },
     newTansactionStatus(data){
+        if(data.status == "Falha"){
+          notify({title:"Falha na transferência",text:"Verifique seus arquivos",icon:"erro"})
+        }else{
+          notify({title:"Transferência concluída",text:"Todos os arquivos transferidos",icon:"concluido"})
+        }
       this.transactions[this.transactions.length-1]=data
     }
   }
