@@ -65,6 +65,7 @@ import DropDown from '@/components/Dropdown.vue'
 import api from '@/services/api'
 import TableCheck from '@/components/TableCheck.vue'
 import TransactionCard from './TransactionCard.vue'
+import {notify} from './notification.js'
 export default {
   name: "CardCollapseNew",
   components: {
@@ -109,7 +110,17 @@ export default {
         application:"654321"
       }})
       .then((res)=>{
-        this.$emit("newTansactionStatus",res)
+
+        for (var i = 0; i < res.data.lenght; i++) {
+          console.log(res.data[i]); 
+        }
+
+        notify({
+          icon: '',
+          nome: '',
+          
+        });
+
         // Criando a nova div
         const div = new TransactionCard
         
