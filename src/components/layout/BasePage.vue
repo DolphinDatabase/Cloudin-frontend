@@ -10,10 +10,6 @@
           <p class="text-gray-300 tracking-4 text-xs lg:text-base">
             {{ info }}
           </p>
-<<<<<<< HEAD
-=======
-
->>>>>>> 867d08c25fe207ef1e43bc8f422098eb6c56d4f9
           <button
             v-if="showButton"
             type="button"
