@@ -116,11 +116,8 @@ export default {
           return `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
         }
       }
-      console.log(tokenHandler[this.origin]())
-      console.log(tokenHandler[this.destiny]())
       headers.headers.origin_token = tokenHandler[this.origin]()
       headers.headers.destiny_token = tokenHandler[this.destiny]()
-      console.log(headers)
       this.$emit("newTansaction",{origin:this.origin, destiny:this.destiny, status:"Em andamento"})
       api.post("/transaction/",data, headers)
       .then((res)=>{
