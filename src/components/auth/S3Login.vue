@@ -6,7 +6,9 @@
           src="@/assets/auth/s3.svg"
           class="w-7 mr-2"
         >
-        <p class="cursor-pointer">Autentique com o S3</p>
+        <p class="cursor-pointer">
+          Autentique com o S3
+        </p>
       </card-component>
     </button>
 

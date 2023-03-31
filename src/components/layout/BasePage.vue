@@ -11,8 +11,6 @@
           <p class="text-gray-300 tracking-4 text-xs lg:text-base">
             {{ info }}
           </p>
-
-          <button @click="gerarNotificacao('Notificação funcionou PORRA')">Gere notificação</button>
           <button
             v-if="showButton"
             type="button"
@@ -25,7 +23,7 @@
             <span class="text-sm lg:text-base"> Adicionar</span>
           </button>
         </div>
-        <div class="mt-8">
+        <div class="mt-8 flex justify-center flex-col">
           <slot />
         </div>
       </div>
@@ -68,5 +66,6 @@ export default {
 #page {
   background-color: #F8F8F8;
   height: 100vh;
+  width: 100vw;
 }
 </style>

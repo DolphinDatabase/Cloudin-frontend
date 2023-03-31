@@ -41,9 +41,8 @@
         </div>
       </DisclosurePanel>
     </Disclosure>
-    <TransactionCard/>
-    <img src="@/assets/emAndamento.svg">
-    <img src="@/assets/erro.svg">
+    <!-- <img src="@/assets/emAndamento.svg">
+    <img src="@/assets/erro.svg"> -->
   </div>
   <ModalComponent
     title="Selecione Arquivos para a transferência"
@@ -64,8 +63,7 @@ import { ChevronUpIcon } from '@heroicons/vue/20/solid'
 import DropDown from '@/components/Dropdown.vue'
 import api from '@/services/api'
 import TableCheck from '@/components/TableCheck.vue'
-import TransactionCard from './TransactionCard.vue'
-import {notify} from './notification.js'
+
 export default {
   name: "CardCollapseNew",
   components: {
@@ -75,13 +73,13 @@ export default {
     ChevronUpIcon,
     DropDown,
     ModalComponent,
-    TableCheck,
-    TransactionCard
+    TableCheck
   },
   data() {
     return {
       origin: '',
       destiny: '',
+      status: '',
       modal:false,
       selected:[],
       files:[],
@@ -103,43 +101,50 @@ export default {
         destiny:this.destiny,
         files:selected
       }
-      this.$emit("newTransaction",{origin:this.origin,destiny:this.destiny})
-      api.post("/transaction/",data,{headers:{
-        origin_token:"AKIA4VVR7RPQYTILT3MO LXYAbeTX6zwfoCdGh4LiAZVEjPwEMvC6ICEBSnDi us-east-1 cloudin-bucket",
-        destiny_token:"ya29.a0Ael9sCMmfe1zrLrVXohsEBVYjfk0Abnafb0I9d2tlzENNTxw7MDaxwXUkhTTgZPPdUkDULYBRl81w2AVUcD_d2VEEHJvrWtB4H2JF0S0uM8n04tpdN1EpuiT97JqbzXnwUMnaVbKX9IquW0KXSHpDIjapJ1GaCgYKAdkSARISFQF4udJhVnRuxq5fljp9KD8EAjTSyw0163",
-        application:"654321"
-      }})
+      var headers = {
+        headers:{
+        origin_token:"",
+        destiny_token:"",
+        application: window.localStorage.getItem("id")
+      }}
+      let tokenHandler = {
+        "google" : () => {
+          return window.localStorage.getItem("google")
+        },
+        "s3" : () => {
+          let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
+          return `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
+        }
+      }
+      console.log(tokenHandler[this.origin]())
+      console.log(tokenHandler[this.destiny]())
+      headers.headers.origin_token = tokenHandler[this.origin]()
+      headers.headers.destiny_token = tokenHandler[this.destiny]()
+      console.log(headers)
+      this.$emit("newTansaction",{origin:this.origin, destiny:this.destiny, status:"Em andamento"})
+      api.post("/transaction/",data, headers)
       .then((res)=>{
-
-        for (var i = 0; i < res.data.lenght; i++) {
-          console.log(res.data[i]); 
+        for(let i in res.data){
+          if("error" in res.data[i]){
+            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Falha"})
+          }else{
+            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Concluído"})
+          }
         }
 
-        notify({
-          icon: '',
-          nome: '',
-          
-        });
-
-        // Criando a nova div
-        const div = new TransactionCard
-        
-        // Adicionando o conteúdo na div
-        div.innerHTML = `<p>Nova transação:</p>
-                          <p>Origem: ${this.origin}</p>
-                          <p>Destino: ${this.destiny}</p>
-                          <p>Arquivos:</p>`
-        selected.forEach((file) => {
-          div.innerHTML += `<p>- ${file.file_name}</p>`
-        })
-        
-        // Adicionando a nova div ao DOM
-        document.body.appendChild(div)
       })
     },
     async listFiles(){
+      var tk = ""
+      if(this.origin=="google"){
+          tk +=  window.localStorage.getItem("google")
+      } else if (this.origin=="s3"){
+        let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
+          tk +=  `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
+          
+      }
       const res = await api.get("/"+this.origin+"/list",{headers:{
-        token:"AKIA4VVR7RPQYTILT3MO LXYAbeTX6zwfoCdGh4LiAZVEjPwEMvC6ICEBSnDi us-east-1 cloudin-bucket"
+        token:tk
       }})
       this.files = res.data.result
     },
