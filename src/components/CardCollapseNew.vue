@@ -41,7 +41,6 @@
         </div>
       </DisclosurePanel>
     </Disclosure>
-    <TransactionCard v-for="t in this.transactions" :key="t.id" :destiny="t.destiny" :origin="t.origin" :status="t.status"/>
     <!-- <img src="@/assets/emAndamento.svg">
     <img src="@/assets/erro.svg"> -->
   </div>
@@ -64,7 +63,6 @@ import { ChevronUpIcon } from '@heroicons/vue/20/solid'
 import DropDown from '@/components/Dropdown.vue'
 import api from '@/services/api'
 import TableCheck from '@/components/TableCheck.vue'
-import TransactionCard from './TransactionCard.vue'
 export default {
   name: "CardCollapseNew",
   components: {
@@ -74,8 +72,7 @@ export default {
     ChevronUpIcon,
     DropDown,
     ModalComponent,
-    TableCheck,
-    TransactionCard
+    TableCheck
   },
   data() {
     return {
@@ -85,19 +82,8 @@ export default {
       modal:false,
       selected:[],
       files:[],
-      showDataDiv: true,
-      transactions:[]
+      showDataDiv: true
     }
-  },
-  mounted(){
-    // var aplication_id = window.localStorage.getItem("id")
-    var aplication_id = "123123"
-    var get_transaction_list_url = "/transaction/" + aplication_id
-    api.get(get_transaction_list_url)
-      .then((res)=>{
-        // Criando a nova div
-        this.transactions.push(res.data)
-      })
   },
   methods: {
     async submitTransaction(){
@@ -118,8 +104,7 @@ export default {
         headers:{
         origin_token:"",
         destiny_token:"",
-        // application: window.localStorage.getItem("id")
-        application: "123123"
+        application: window.localStorage.getItem("id")
       }}
       let tokenHandler = {
         "google" : () => {
@@ -132,12 +117,18 @@ export default {
       }
       headers.origin_token = tokenHandler[this.origin]()
       headers.destiny_token = tokenHandler[this.destiny]()
-      this.transactions.push({origin:this.origin, destiny:this.destiny, status:"Em andamento"})
-      api.post("/transaction/",data, {headers:headers})
+      console.log(headers)
+      this.$emit("newTansaction",{origin:this.origin, destiny:this.destiny, status:"Em andamento"})
+      api.post("/transaction/",data, headers)
       .then((res)=>{
-        // Criando a nova div
-        console.log(res)
-        console.log(res.data)
+        for(let i in res.data){
+          if("error" in res.data[i]){
+            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Falha"})
+          }else{
+            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Concluído"})
+          }
+        }
+
       })
     },
     async listFiles(){
