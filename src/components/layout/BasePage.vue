@@ -1,7 +1,6 @@
 <template>
   <div id="page">
     <navigation-bar />
-    <NotificationComponent ref="notificacao" />
     <div class="container mx-auto space-y-6 h-full">
       <div class="px-[72px] sm:px-48 lg:px-64 ">
         <p class="text-md lg:text-2xl text-green-500 font-bold py-10">
@@ -12,7 +11,6 @@
             {{ info }}
           </p>
 
-          <button @click="gerarNotificacao('Notificação funcionou PORRA')">Gere notificação</button>
           <button
             v-if="showButton"
             type="button"
@@ -36,11 +34,10 @@
 <script>
 import NavigationBar from './NavigationBar.vue';
 import { PlusSmallIcon } from '@heroicons/vue/24/outline'
-import NotificationComponent from '../NotificationComponent.vue';
 
 export default {
   name: "BasePage",
-  components: { NavigationBar, PlusSmallIcon, NotificationComponent },
+  components: { NavigationBar, PlusSmallIcon },
   props: {
     title: {
       required: true,
@@ -56,10 +53,7 @@ export default {
     }
   },
   methods: {
-    gerarNotificacao(msg) {
-      const notificacao = this.$refs.notificacao;
-      notificacao.exibirNotificacao(msg);
-    }
+    
   }
 }
 </script>

@@ -1,5 +1,7 @@
-export default {
-    async notify(data){
+import Vector from "@/assets/notification/Vector.svg"
+import Complete from "@/assets/notification/Complete.svg"
+
+    async function notify(data){
         if (!("Notification" in window)) {
             console.warn("Este navegador não suporta notificações do HTML5");
             return;
@@ -10,10 +12,10 @@ export default {
             let icon
             switch(data.icon){
                 case ("erro"):
-                    icon = "@/assets/notification/Vector.svg"
+                    icon = Vector
                     break;
                 case ("concluido"):
-                    icon = "@/assets/notification/Complete.svg"
+                    icon = Complete
                     break; 
             }
             new Notification("Notificação", {
@@ -22,6 +24,7 @@ export default {
             })
         }
     }       
-}
+
+    export default notify
 
 

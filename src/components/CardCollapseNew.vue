@@ -65,7 +65,7 @@ import DropDown from '@/components/Dropdown.vue'
 import api from '@/services/api'
 import TableCheck from '@/components/TableCheck.vue'
 import TransactionCard from './TransactionCard.vue'
-import {notify} from './notification.js'
+import notify from '@/utils/notification'
 export default {
   name: "CardCollapseNew",
   components: {
@@ -103,38 +103,20 @@ export default {
         destiny:this.destiny,
         files:selected
       }
-      this.$emit("newTransaction",{origin:this.origin,destiny:this.destiny})
       api.post("/transaction/",data,{headers:{
         origin_token:"AKIA4VVR7RPQYTILT3MO LXYAbeTX6zwfoCdGh4LiAZVEjPwEMvC6ICEBSnDi us-east-1 cloudin-bucket",
-        destiny_token:"ya29.a0Ael9sCMmfe1zrLrVXohsEBVYjfk0Abnafb0I9d2tlzENNTxw7MDaxwXUkhTTgZPPdUkDULYBRl81w2AVUcD_d2VEEHJvrWtB4H2JF0S0uM8n04tpdN1EpuiT97JqbzXnwUMnaVbKX9IquW0KXSHpDIjapJ1GaCgYKAdkSARISFQF4udJhVnRuxq5fljp9KD8EAjTSyw0163",
-        application:"654321"
+        destiny_token:"ya29.a0Ael9sCNf4X7ij_1MnV4OX0FgKspX3EaDKbWF-gJ_wyvq0H4CNPr2oWSoux2wgu7-Y2lzjhXBlvQq9ad9ippvr5QDdxdacyXFpV2a_lAJgUamScnHJeMTHuodjJg3SrBPlfmuJfPbxehtwYIS7XnDta7xBmzaaCgYKAQcSARASFQF4udJhqoIAed3lWkDozkgGbCx5fA0163",
+        application:"123123"
       }})
       .then((res)=>{
-
-        for (var i = 0; i < res.data.lenght; i++) {
-          console.log(res.data[i]); 
+        for(let l in res.data){
+          if("error" in res.data[l]){
+            notify({icon:"erro",text:"Falha na transação"})
+          }else{
+            notify({icon:"concluido",text:"Transação realizada com sucesso"})
+          }
         }
-
-        notify({
-          icon: '',
-          nome: '',
-          
-        });
-
-        // Criando a nova div
-        const div = new TransactionCard
-        
-        // Adicionando o conteúdo na div
-        div.innerHTML = `<p>Nova transação:</p>
-                          <p>Origem: ${this.origin}</p>
-                          <p>Destino: ${this.destiny}</p>
-                          <p>Arquivos:</p>`
-        selected.forEach((file) => {
-          div.innerHTML += `<p>- ${file.file_name}</p>`
-        })
-        
-        // Adicionando a nova div ao DOM
-        document.body.appendChild(div)
+        console.log(res);
       })
     },
     async listFiles(){
