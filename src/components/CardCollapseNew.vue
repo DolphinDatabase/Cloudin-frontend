@@ -41,9 +41,9 @@
         </div>
       </DisclosurePanel>
     </Disclosure>
-    <TransactionCard/>
-    <img src="@/assets/emAndamento.svg">
-    <img src="@/assets/erro.svg">
+    <TransactionCard v-for="t in this.transactions" :key="t.id" :destiny="t.destiny" :origin="t.origin" :status="t.status"/>
+    <!-- <img src="@/assets/emAndamento.svg">
+    <img src="@/assets/erro.svg"> -->
   </div>
   <ModalComponent
     title="Selecione Arquivos para a transferência"
@@ -81,11 +81,22 @@ export default {
     return {
       origin: '',
       destiny: '',
+      status: '',
       modal:false,
       selected:[],
       files:[],
-      showDataDiv: true
+      showDataDiv: true,
+      transactions:[]
     }
+  },
+  mounted(){
+    var aplication_id = window.localStorage.getItem("id")
+    var get_transaction_list_url = "/transaction/" + aplication_id
+    api.get(get_transaction_list_url)
+      .then((res)=>{
+        // Criando a nova div
+        this.transactions.push(res.data)
+      })
   },
   methods: {
     async submitTransaction(){
@@ -102,28 +113,28 @@ export default {
         destiny:this.destiny,
         files:selected
       }
-      this.$emit("newTransaction",{origin:this.origin,destiny:this.destiny})
-      api.post("/transaction/",data,{headers:{
-        origin_token:"AKIA4VVR7RPQYTILT3MO LXYAbeTX6zwfoCdGh4LiAZVEjPwEMvC6ICEBSnDi us-east-1 cloudin-bucket",
-        destiny_token:"ya29.a0Ael9sCMmfe1zrLrVXohsEBVYjfk0Abnafb0I9d2tlzENNTxw7MDaxwXUkhTTgZPPdUkDULYBRl81w2AVUcD_d2VEEHJvrWtB4H2JF0S0uM8n04tpdN1EpuiT97JqbzXnwUMnaVbKX9IquW0KXSHpDIjapJ1GaCgYKAdkSARISFQF4udJhVnRuxq5fljp9KD8EAjTSyw0163",
-        application:"654321"
-      }})
+      var headers = {
+        headers:{
+        origin_token:"",
+        destiny_token:"",
+        application: window.localStorage.getItem("id")
+      }}
+      let tokenHandler = {
+        "google" : () => {
+          return this.$store.getters.getGoogleAuth
+        },
+        "s3" : () => {
+          let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
+          return `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
+        }
+      }
+      headers.origin_token = tokenHandler[this.origin]()
+      headers.destiny_token = tokenHandler[this.destiny]()
+      this.transactions.push({origin:this.origin, destiny:this.destiny, status:"Em andamento"})
+      api.post("/transaction/",data, {headers:headers})
       .then((res)=>{
-        this.$emit("newTansactionStatus",res)
         // Criando a nova div
-        const div = new TransactionCard
-        
-        // Adicionando o conteúdo na div
-        div.innerHTML = `<p>Nova transação:</p>
-                          <p>Origem: ${this.origin}</p>
-                          <p>Destino: ${this.destiny}</p>
-                          <p>Arquivos:</p>`
-        selected.forEach((file) => {
-          div.innerHTML += `<p>- ${file.file_name}</p>`
-        })
-        
-        // Adicionando a nova div ao DOM
-        document.body.appendChild(div)
+        console.log(res)
       })
     },
     async listFiles(){
