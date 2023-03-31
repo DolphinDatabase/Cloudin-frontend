@@ -123,14 +123,13 @@ export default {
       }}
       let tokenHandler = {
         "google" : () => {
-          return this.$store.getters.getGoogleAuth
+          return window.localStorage.getItem("google")
         },
         "s3" : () => {
           let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
           return `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
         }
       }
-      console.log(this.$store.getters.getGoogleAuth)
       headers.origin_token = tokenHandler[this.origin]()
       headers.destiny_token = tokenHandler[this.destiny]()
       this.transactions.push({origin:this.origin, destiny:this.destiny, status:"Em andamento"})
@@ -144,7 +143,7 @@ export default {
     async listFiles(){
       var tk = ""
       if(this.origin=="google"){
-          tk +=  this.$store.getters.getGoogleAuth
+          tk +=  window.localStorage.getItem("google")
       } else if (this.origin=="s3"){
         let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
           tk +=  `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
