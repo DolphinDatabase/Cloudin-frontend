@@ -23,19 +23,22 @@
               <li
                 v-for="item in navigation"
                 :key="item.href"
-                class="block py-1 w-[52px] hover:w-full"
+                class="w-max flex items-center gap-4 text-sm lg:text-lg"
               >
-                <router-link :to="item.href">
-                  <div
-                    class="w-max flex items-center p-2 gap-4 rounded-full bg-white-200 text-green-500 text-sm lg:text-lg"
-                  >
-                    <component
-                      :is="item.icon"
-                      class="h-5 w-5 ml-2 mr-2 lg:mr-4"
-                    />
-                    <span>{{ item.label }}</span>
-                  </div>
-                </router-link>
+                <div
+                  :class="{ 'rounded-full bg-white-200 text-green-500': $route.path === item.href, 'bg-green-500 text-white-200': $route.path !== item.href }"
+                >
+                  <router-link :to="item.href">
+                    <div class="w-max flex items-center p-2 gap-4 rounded-full text-sm lg:text-lg">
+                      <component
+                        :is="item.icon"
+                        class="h-5 w-5 ml-2 mr-2 lg:mr-4"
+                        :class="{ 'text-green-500': $route.path === item.href, 'text-white-200': $route.path !== item.href }"
+                      />
+                      <span>{{ item.label }}</span>
+                    </div>
+                  </router-link>
+                </div>
               </li>
             </ul>
           </div>
@@ -44,7 +47,7 @@
     </div>
   </div>
 </template>
-
+<!-- " -->
 <script>
 import { Cog6ToothIcon, ArrowsRightLeftIcon } from '@heroicons/vue/24/solid';
 export default {

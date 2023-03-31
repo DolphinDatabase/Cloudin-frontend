@@ -3,29 +3,30 @@
     title="Transferências"
     info="Realize suas transferências e analise os metadados"
     :show-button="true"
-    @clickPageButton="()=>{transfers=1}"
+    @clickPageButton="() => { transfers = 1 }"
   >
-    <div class="flex justify-center align-center">
-      <div v-if="transfers == 0">
-        <img
-          src="@/assets/adicionar.svg"
-          class="w-[680px]"
-        >
-        <div class="mt-8 justify-center flex">
-          <p class="lg:text-base text-sm">
-            Não encontramos nenhuma transferência, clique no botão <span>adicionar</span> para começar!
-          </p>
-        </div>
-      </div>
-      <div
-        v-else
-        class="contents"
+    <div
+      v-if="transfers == 0"
+      class="flex justify-center align-center flex-col"
+    >
+      <img
+        src="@/assets/adicionar.svg"
+        class="w-[680px]"
       >
-        <CardCollapseNew
-          @newTansaction="(data)=>{}"
-          @newTansactionStatus="(data)=>{}"
-        />
+      <div class="mt-8 justify-center flex">
+        <p class="lg:text-base text-sm">
+          Não encontramos nenhuma transferência, clique no botão <span>adicionar</span> para começar!
+        </p>
       </div>
+    </div>
+    <div
+      v-else
+      class="contents"
+    >
+      <CardCollapseNew
+        @newTansaction="(data) => { }"
+        @newTansactionStatus="(data) => { }"
+      />
     </div>
   </BasePage>
 </template>
@@ -35,23 +36,23 @@ import BasePage from '@/components/layout/BasePage.vue';
 import CardCollapseNew from '@/components/CardCollapseNew.vue'
 
 export default {
-    name: "TransferView",
-    components: {
-        BasePage,
-        CardCollapseNew
-    },
-    data() {
-        return {
-            transfers: 0,
-        }
-    },
-    
+  name: "TransferView",
+  components: {
+    BasePage,
+    CardCollapseNew
+  },
+  data() {
+    return {
+      transfers: 0,
+    }
+  },
+
 }
 </script>
 
 <style scoped>
 span {
-    font-weight: 700;
-    color: #96DA84;
+  font-weight: 700;
+  color: #96DA84;
 }
 </style>
