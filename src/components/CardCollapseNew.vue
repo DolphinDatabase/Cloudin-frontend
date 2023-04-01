@@ -2,40 +2,24 @@
   <div class="w-[100%]">
     <Disclosure v-slot="{ open }">
       <DisclosureButton
-        class="flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium"
-      >
+        class="flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium">
         <span>Preencha os campos cuidadosamente</span>
-        <ChevronUpIcon
-          :class="open ? 'rotate-180 transform' : ''"
-          class="h-5 w-5 text-black"
-        />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-black" />
       </DisclosureButton>
-      <DisclosurePanel
-        class="px-12 pt-4 pb-4 text-sm bg-gray-100"
-        static
-      >
+      <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-gray-100" static>
         <div class="flex justify-between mb-2">
           <div>
             <p>De:</p>
-            <DropDown
-              :list="[{ nome: 'Google' }, { nome: 'S3' }]"
-              @onSelect="(e) => { origin = e }"
-            />
+            <DropDown :list="[{ nome: 'Google' }, { nome: 'S3' }]" @onSelect="(e) => { origin = e }" />
           </div>
           <ArrowSmallRightIcon />
           <div>
             <p>De:</p>
-            <DropDown
-              :list="[{ nome: 'Google' }, { nome: 'S3' }]"
-              @onSelect="(e) => { destiny = e }"
-            />
+            <DropDown :list="[{ nome: 'Google' }, { nome: 'S3' }]" @onSelect="(e) => { destiny = e }" />
           </div>
         </div>
         <div class="flex justify-center">
-          <button
-            class="bg-green-500 text-white-100 font-bold py-2 px-4 rounded"
-            @click="chooseFiles()"
-          >
+          <button class="bg-green-500 text-white-100 font-bold py-2 px-4 rounded" @click="chooseFiles()">
             Escolher arquivos
           </button>
         </div>
@@ -44,16 +28,9 @@
     <!-- <img src="@/assets/emAndamento.svg">
     <img src="@/assets/erro.svg"> -->
   </div>
-  <ModalComponent
-    title="Selecione Arquivos para a transferência"
-    :open="modal"
-    @closeModal="()=>{modal=false}"
-    @submitData="()=>{submitTransaction()}"
-  >
-    <TableCheck
-      ref="table"
-      :data="files"
-    />
+  <ModalComponent title="Selecione Arquivos para a transferência" :open="modal" @closeModal="() => { modal = false }"
+    @submitData="() => { submitTransaction() }">
+    <TableCheck ref="table" :data="this.files" />
   </ModalComponent>
 </template>
 <script>
@@ -79,77 +56,80 @@ export default {
       origin: '',
       destiny: '',
       status: '',
-      modal:false,
-      selected:[],
-      files:[],
+      modal: false,
+      selected: [],
+      files: [],
       showDataDiv: true
     }
   },
   methods: {
-    async submitTransaction(){
+    async submitTransaction() {
       this.modal = false
       var selected = []
       this.$refs.table.selected.forEach(file => {
         let s = this.files.filter(
-          (f)=>{return f.id==file}
+          (f) => { return f.id == file }
         )
-        selected.push({file_id:s[0].id,file_name:s[0].name})
+        selected.push({ file_id: s[0].id, file_name: s[0].name })
       });
       var data = {
-        origin:this.origin,
-        destiny:this.destiny,
-        files:selected
+        origin: this.origin,
+        destiny: this.destiny,
+        files: selected
       }
       var headers = {
-        headers:{
-        origin_token:"",
-        destiny_token:"",
-        application: window.localStorage.getItem("id")
-      }}
+        headers: {
+          origin_token: "",
+          destiny_token: "",
+          application: window.localStorage.getItem("id")
+        }
+      }
       let tokenHandler = {
-        "google" : () => {
+        "google": () => {
           return window.localStorage.getItem("google")
         },
-        "s3" : () => {
+        "s3": () => {
           let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
           return `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
         }
       }
       headers.headers.origin_token = tokenHandler[this.origin]()
       headers.headers.destiny_token = tokenHandler[this.destiny]()
-      this.$emit("newTansaction",{origin:this.origin, destiny:this.destiny, status:"Em andamento"})
-      api.post("/transaction/",data, headers)
-      .then((res)=>{
-        for(let i in res.data){
-          if("error" in res.data[i]){
-            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Falha"})
-          }else{
-            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Concluído"})
+      this.$emit("newTansaction", { origin: this.origin, destiny: this.destiny, status: "Em andamento" })
+      api.post("/transaction/", data, headers)
+        .then((res) => {
+          for (let i in res.data) {
+            if ("error" in res.data[i]) {
+              this.$emit("updateStatus", { origin: this.origin, destiny: this.destiny, status: "Falha" })
+            } else {
+              this.$emit("updateStatus", { origin: this.origin, destiny: this.destiny, status: "Concluído" })
+            }
           }
-        }
 
-      })
+        })
     },
-    async listFiles(){
+    async listFiles() {
       var tk = ""
-      if(this.origin=="google"){
-          tk +=  window.localStorage.getItem("google")
-      } else if (this.origin=="s3"){
+      if (this.origin == "google") {
+        tk += window.localStorage.getItem("google")
+      } else if (this.origin == "s3") {
         let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
-          tk +=  `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
-          
+        tk += `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
+
       }
-      const res = await api.get("/"+this.origin+"/list",{headers:{
-        token:tk
-      }})
+      const res = await api.get("/" + this.origin + "/list", {
+        headers: {
+          token: tk
+        }
+      })
       this.files = res.data.result
+      this.modal = true
     },
     chooseFiles() {
       if (this.origin == '' || this.origin == null || this.destiny == '' || this.destiny == null) {
         console.error("no drives selected")
       } else {
         this.listFiles()
-        this.modal=true
       }
     }
   }
