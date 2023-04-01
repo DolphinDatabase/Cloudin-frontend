@@ -9,7 +9,7 @@
     </div>
     <div
       v-if="this.transactions.length<=0"
-      class="flex justify-center align-center flex-col"
+      class="flex justify-center items-center flex-col"
     >
       <img
         src="@/assets/adicionar.svg"
