@@ -34,7 +34,7 @@
   </div>
   <ModalComponent title="Selecione Arquivos para a transferência" :open="modal" @closeModal="() => { modal = false }"
     @submitData="() => { submitTransaction() }">
-    <TableCheck ref="table" :data="files" />
+    <TableCheck ref="table" :data="this.files" />
   </ModalComponent>
 </template>
 <script>
@@ -122,13 +122,13 @@ export default {
         }
       })
       this.files = res.data.result
+      this.modal = true
     },
     chooseFiles() {
       if (!this.origin || !this.destiny) {
         console.error("no drives selected")
       } else {
         this.listFiles()
-        this.modal = true
       }
     }
   }

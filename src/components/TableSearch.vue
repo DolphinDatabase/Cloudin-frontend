@@ -21,8 +21,7 @@
         class="border-2 pl-10 pr-3 py-2 rounded-lg w-full"
         placeholder="pesquisar..."
       />
-      <!-- <input type="checkbox" @click="selectAllRows" :checked="selectedRows.length === rows.length" />
-      Esse input adicina um check box na caixa de pesqua -->
+     
     </div>
 
     <table class="border-collapse border border-black border-2">
