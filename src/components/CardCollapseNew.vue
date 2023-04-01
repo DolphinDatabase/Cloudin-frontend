@@ -104,15 +104,15 @@ export default {
       headers.headers.origin_token = tokenHandler[this.origin]()
       headers.headers.destiny_token = tokenHandler[this.destiny]()
 
-      this.$emit("newTansaction",{origin:this.origin, destiny:this.destiny, status:"Em andamento"})
+      this.$emit("newTransaction",{origin:this.origin, destiny:this.destiny, status:"Em andamento"})
       
       api.post("/transaction/",data, headers)
       .then((res)=>{
         for(let i in res.data){
           if("error" in res.data[i]){
-            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Falha"})
+            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Erro"})
           }else{
-            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Concluído"})
+            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Concluido"})
           }
         }
       })

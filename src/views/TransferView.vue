@@ -22,7 +22,7 @@
 
     <div v-if="showCollapse">
       <div class="contents">
-        <CardCollapseNew @newTansaction="(data) => {this.newTransaction(data); this.showCollapse = false}" @updateStatus="(data) => this.newTansactionStatus(data)" />
+        <CardCollapseNew @newTransaction="(data) => {this.newTransaction(data); this.showCollapse = false}" @updateStatus="(data) => this.newTansactionStatus(data)" />
       </div>
     </div>
 
@@ -50,7 +50,7 @@ export default {
     api.get(`/transaction/${window.localStorage.getItem("id")}`)
     .then((res) => {
       for(let t in res.data){
-        this.transactions.push(t)
+        this.transactions.push(res.data[t])
       }
     })
   },
@@ -66,11 +66,11 @@ export default {
       this.transactions.push(data)
     },
     newTansactionStatus(data){
-        if(data.status == "Falha"){
-          notify({title:"Falha na transferência",text:"Verifique seus arquivos",icon:"erro"})
-        }else{
-          notify({title:"Transferência concluída",text:"Todos os arquivos transferidos",icon:"concluido"})
-        }
+      if(data.status == "Falha"){
+        notify({title:"Falha na transferência",text:"Verifique seus arquivos",icon:"erro"})
+      }else{
+        notify({title:"Transferência concluída",text:"Todos os arquivos transferidos",icon:"concluido"})
+      }
       this.transactions[this.transactions.length-1]=data
     }
   }
