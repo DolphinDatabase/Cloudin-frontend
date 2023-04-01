@@ -69,8 +69,9 @@ export default {
       showDataDiv: true
     }
   },
+  emits: ["newTransaction", "updateStatus"],
   methods: {
-    async submitTransaction() {
+    submitTransaction() {
       this.modal = false
       var selected = []
       this.$refs.table.selected.forEach(file => {
@@ -79,6 +80,7 @@ export default {
         )
         selected.push({ file_id: s[0].id, file_name: s[0].name })
       });
+
       var data = {
         origin: this.origin,
         destiny: this.destiny,
@@ -104,18 +106,7 @@ export default {
       headers.headers.origin_token = tokenHandler[this.origin]()
       headers.headers.destiny_token = tokenHandler[this.destiny]()
 
-      this.$emit("newTransaction",{origin:this.origin, destiny:this.destiny, status:"Em andamento"})
-      
-      api.post("/transaction/",data, headers)
-      .then((res)=>{
-        for(let i in res.data){
-          if("error" in res.data[i]){
-            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Erro"})
-          }else{
-            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Concluido"})
-          }
-        }
-      })
+      this.$emit("newTransaction",{ origin:this.origin, destiny:this.destiny, status:"Em andamento", data: data, headers: headers })
     },
     async listFiles() {
       var tk = ""

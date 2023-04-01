@@ -22,7 +22,7 @@
 
     <div v-if="showCollapse">
       <div class="contents">
-        <CardCollapseNew @newTransaction="(data) => {this.newTransaction(data); this.showCollapse = false}" @updateStatus="(data) => this.newTansactionStatus(data)" />
+        <CardCollapseNew v-on="eventsHandler"/>
       </div>
     </div>
 
@@ -58,14 +58,33 @@ export default {
     return {
       transfers: 0,
       transactions:[],
-      showCollapse: false
+      showCollapse: false,
+      eventsHandler: {
+        newTransaction: this.newTransaction,
+      }
     }
   },
   methods: {
-    newTransaction(data){
-      this.transactions.push(data)
+    newTransaction(payload){
+      this.transactions.push(payload);
+      this.showCollapse = false;
+
+      api.post("/transaction/", payload.data, payload.headers)
+      .then((res)=>{
+        for(let i in res.data){
+          if("error" in res.data[i]){
+            this.newTransactionStatus({ origin:this.origin, destiny:this.destiny, status:"Erro" });
+          }else{
+            this.newTransactionStatus({ origin:this.origin, destiny:this.destiny, status:"Concluido"});
+          }
+        }
+      })
+
     },
-    newTansactionStatus(data){
+    newTransactionStatus(data){
+
+      console.log('teste');
+
       if(data.status == "Falha"){
         notify({title:"Falha na transferência",text:"Verifique seus arquivos",icon:"erro"})
       }else{
