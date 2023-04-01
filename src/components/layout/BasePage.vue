@@ -13,13 +13,13 @@
           <button
             v-if="showButton"
             type="button"
-            class="flex items-center px-2 py-1 gap-2 border-none rounded-lg bg-green-500 text-white-100 w-[36px] sm:w-[48px] overflow-hidden md:w-28 md:overflow-visible"
+            class="flex items-center justify-center pl-[2px] pr-[6px] py-1 gap-2  border-none rounded bg-green-500 text-white-100 w-[36px] sm:w-[48px] overflow-hidden md:w-28 md:overflow-visible"
             @click="()=>{$emit('clickPageButton')}"
           >
             <div>
               <PlusSmallIcon class="h-5 w-5" />
             </div>
-            <span class="text-sm lg:text-base"> Adicionar</span>
+            <p class="text-sm lg:text-base ">Adicionar</p>
           </button>
         </div>
         <div class="mt-8 flex justify-center flex-col">
@@ -62,5 +62,6 @@ export default {
   background-color: #F8F8F8;
   height: 100vh;
   width: 100vw;
+  overflow: auto;
 }
 </style>

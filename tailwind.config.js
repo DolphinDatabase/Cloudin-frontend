@@ -5,7 +5,8 @@ module.exports = {
     extend: {
       colors: {
         green: {
-          500: '#96DA84'
+          500: '#96DA84',
+          100: '#00CB54'
         },
         gray: { 
           100: '#F2F2F2', 
@@ -17,6 +18,12 @@ module.exports = {
           200: '#F8F8F8',
 
         },
+        red: {
+          100: '#FF5344'
+        },
+        yellow: {
+          100: '#FFCF4F'
+        }
       },
       fontFamily: {
         'nunito': ['Nunito', 'sans-serif']
