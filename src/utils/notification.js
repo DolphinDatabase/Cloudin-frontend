@@ -24,6 +24,3 @@ export default async function notify(data) {
         })
     }
 }
-
-
-

@@ -2,14 +2,14 @@
   <div class="w-[100%]">
     <Disclosure v-slot="{ open }">
       <DisclosureButton
-        class="flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium">
+        class="shadow flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium">
         <div class="flex gap-2 items-center">
           <ExclamationCircleIcon class="h-5 w-5" />
           <p class="font-bold">Preencha os campos cuidadosamente</p>
         </div>
         <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-black" />
       </DisclosureButton>
-      <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-gray-100" static>
+      <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-gray-100">
         <div class="flex justify-between mb-2">
           <div>
             <p>De:</p>
@@ -100,20 +100,22 @@ export default {
           return `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
         }
       }
+
       headers.headers.origin_token = tokenHandler[this.origin]()
       headers.headers.destiny_token = tokenHandler[this.destiny]()
-      this.$emit("newTansaction", { origin: this.origin, destiny: this.destiny, status: "Em andamento" })
-      api.post("/transaction/", data, headers)
-        .then((res) => {
-          for (let i in res.data) {
-            if ("error" in res.data[i]) {
-              this.$emit("updateStatus", { origin: this.origin, destiny: this.destiny, status: "Falha" })
-            } else {
-              this.$emit("updateStatus", { origin: this.origin, destiny: this.destiny, status: "Concluído" })
-            }
-          }
 
-        })
+      this.$emit("newTansaction",{origin:this.origin, destiny:this.destiny, status:"Em andamento"})
+      
+      api.post("/transaction/",data, headers)
+      .then((res)=>{
+        for(let i in res.data){
+          if("error" in res.data[i]){
+            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Falha"})
+          }else{
+            this.$emit("updateStatus",{origin:this.origin, destiny:this.destiny, status:"Concluído"})
+          }
+        }
+      })
     },
     async listFiles() {
       var tk = ""
@@ -121,8 +123,7 @@ export default {
         tk += window.localStorage.getItem("google")
       } else if (this.origin == "s3") {
         let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
-        tk += `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
-
+        tk +=  `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
       }
       const res = await api.get("/" + this.origin + "/list", {
         headers: {
@@ -132,7 +133,7 @@ export default {
       this.files = res.data.result
     },
     chooseFiles() {
-      if (this.origin == '' || this.origin == null || this.destiny == '' || this.destiny == null) {
+      if (!this.origin || !this.destiny) {
         console.error("no drives selected")
       } else {
         this.listFiles()
