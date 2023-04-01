@@ -3,13 +3,11 @@
     title="Transferências"
     info="Realize suas transferências e analise os metadados"
     :show-button="true"
+    @clickPageButton="showCollapse = true"
   >
-    <div class="contents">
-      <CardCollapseNew @newTansaction="(data) => this.newTransaction(data)" @updateStatus="(data) => this.newTansactionStatus(data)" />
-    </div>
     <div
-      v-if="this.transactions.length<=0"
-      class="flex justify-center items-center flex-col"
+      v-if="this.transactions.length <= 0 && !showCollapse"
+      class="flex justify-center align-center flex-col"
     >
       <img
         src="@/assets/adicionar.svg"
@@ -21,6 +19,13 @@
         </p>
       </div>
     </div>
+
+    <div v-if="showCollapse">
+      <div class="contents">
+        <CardCollapseNew @newTansaction="(data) => {this.newTransaction(data); this.showCollapse = false}" @updateStatus="(data) => this.newTansactionStatus(data)" />
+      </div>
+    </div>
+
     <div class="mt-8">
       <TransactionCard v-for="t in this.transactions" :key="t.id" :destiny="t.destiny" :origin="t.origin" :status="t.status"/>
     </div>
@@ -42,9 +47,8 @@ export default {
     TransactionCard
   },
   mounted(){
-    var get_transaction_list_url = "/transaction/" + window.localStorage.getItem("id")
-    api.get(get_transaction_list_url)
-    .then((res)=>{
+    api.get(`/transaction/${window.localStorage.getItem("id")}`)
+    .then((res) => {
       for(let t in res.data){
         this.transactions.push(t)
       }
@@ -53,10 +57,11 @@ export default {
   data() {
     return {
       transfers: 0,
-      transactions:[]
+      transactions:[],
+      showCollapse: false
     }
   },
-  methods:{
+  methods: {
     newTransaction(data){
       this.transactions.push(data)
     },
