@@ -1,45 +1,61 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <div class="p-10">
+      <div class="m-3 flex justify-end">
         <div class="relative search-field">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-            class="absolute z-10 w-6 h-6 left-3 top-3 text-gray-600">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
-          <input @input="onSearch()" v-model="this.search" type="text" class="border-2 pl-10 pr-3 py-2 rounded-lg w-full"
-            placeholder="pesquisar..." />
-
+          <MagnifyingGlassIcon class="absolute z-10 w-4 h-4 left-2 top-[10px] text-gray-600" />
+          <input
+            v-model="search"
+            type="text"
+            class="border-2 pl-8 py-1 rounded-md"
+            placeholder="Buscar"
+            @input="onSearch()"
+          >
         </div>
       </div>
-      <table class="mt-1 w-[100%]">
-        <thead class="border-solid border-b-2 border-black">
-          <tr>
-            <th>
-              <input v-model="select_all" type="checkbox" @click="select">
-            </th>
-            <th>Nome do arquivo</th>
-            <th>Tamanho</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="d in this.filtred" :key="d.id">
-            <td>
-              <input v-model="selected" type="checkbox" :value="d.id">
-            </td>
-            <td> {{ d.name }}</td>
-            <td>{{ (d.size) ? d.size : "-" }}</td>
-          </tr>
-        </tbody>
-      </table>
+        <table class="w-[530px] flex flex-col">
+          <thead>
+            <tr class="flex border-b-2 border-black">
+              <th>
+                <input
+                  v-model="select_all"
+                  type="checkbox"
+                  @click="select"
+                >
+              </th>
+              <th class="mr-56">Nome do arquivo</th>
+              <th>Tamanho (kb)</th>
+            </tr>
+          </thead>
+          <tbody class="block h-[300px] overflow-auto">
+            <tr
+              v-for="d in filtred"
+              :key="d.id"
+            >
+              <td>
+                <input
+                  v-model="selected"
+                  type="checkbox"
+                  :value="d.id"
+                >
+              </td>
+              <td> {{ d.name }}</td>
+              <td>{{ (d.size) ? d.size : "-" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      <!-- </div> -->
     </div>
   </div>
 </template>
     
 <script>
+import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
 export default {
   name: 'TableCheck',
+  components:{
+    MagnifyingGlassIcon
+  },
   props: {
     data: Array
   },
@@ -80,4 +96,17 @@ export default {
   }
 }
 </script>
-    
+
+<!-- <style scoped>
+thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;/* even columns width , fix width of table too*/
+}
+thead {
+    width: calc( 100% - 1em )/* scrollbar is average 1em/16px width, remove it from thead width */
+}
+table {
+    width: 400px;
+}
+</style> -->
