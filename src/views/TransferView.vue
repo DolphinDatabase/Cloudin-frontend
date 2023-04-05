@@ -7,10 +7,11 @@
   >
     <div
       v-if="this.transactions.length <= 0 && !showCollapse"
-      class="flex justify-center align-center flex-col"
+      class="flex justify-center items-center flex-col"
     >
       <img
         src="@/assets/adicionar.svg"
+        alt=""
         class="w-[680px]"
       >
       <div class="mt-8 justify-center flex">
@@ -82,10 +83,7 @@ export default {
 
     },
     newTransactionStatus(data){
-
-      console.log('teste');
-
-      if(data.status == "Falha"){
+      if(data.status == "Erro"){
         notify({title:"Falha na transferência",text:"Verifique seus arquivos",icon:"erro"})
       }else{
         notify({title:"Transferência concluída",text:"Todos os arquivos transferidos",icon:"concluido"})
