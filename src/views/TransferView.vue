@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div class="mt-8">
+    <div>
       <TransactionCard v-for="t in this.transactions" :key="t.id" :destiny="t.destiny" :origin="t.origin" :status="t.status"/>
     </div>
     
