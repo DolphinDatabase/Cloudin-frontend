@@ -55,13 +55,13 @@ export default {
     };
   },
   mounted() {
-    let s3AuthStorage = JSON.parse(window.localStorage.getItem("s3Auth"));
+    let s3AuthStorage = this.$store.getters.getS3Token;
     if (s3AuthStorage != null)
       this.s3Auth = s3AuthStorage;
   },
   methods: {
     saveS3Auth() {
-      window.localStorage.setItem("s3Auth", JSON.stringify(this.s3Auth));
+      this.$store.dispatch("updateS3Token",this.s3Auth)
       this.closePopup();
     },
     closePopup() {
@@ -91,6 +91,4 @@ export default {
   row-gap: 15px;
   align-items: stretch;
 }
-
-.popup input {}
 </style>
