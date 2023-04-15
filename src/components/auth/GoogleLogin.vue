@@ -10,7 +10,7 @@
 <script>
 import { googleSdkLoaded } from 'vue3-google-login';
 import axios from 'axios';
-import CardComponent from '@/components/CardComponent.vue'
+import CardComponent from '@/components/cards/CardComponent.vue'
 
 export default {
     name: 'GoogleLogin',
