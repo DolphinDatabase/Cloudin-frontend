@@ -48,7 +48,6 @@ import CardCollapseNew from '@/components/cards/CardCollapseNew.vue'
 import TransactionCard from '@/components/cards/TransactionCard.vue'
 import api from '@/services/api';
 import notify from '@/utils/notification'
-import { mapGetters } from 'vuex';
 
 export default {
   name: "TransferView",
@@ -59,7 +58,6 @@ export default {
   },
   data() {
     return {
-      transfers: 0,
       transactions: [],
       showCollapse: false,
       eventsHandler: {
@@ -67,21 +65,8 @@ export default {
       },
     }
   },
-  computed: {
-    ...mapGetters([
-      'getFileById', 'getAllFiles', 'getTransactionById'
-    ]),
-    file() {
-      return this.$store.getters.getFileById(1)
-    },
-    transaction() {
-      return this.$store.getters.getTransactionByFileId(1)
-    }
-  },
   created() {
-    this.transfers = this.$store.getters.getAllFiles
     this.transactions = this.$store.getters.getConfigs
-    console.log(this.transactions)
   },
   methods: {
     newTransaction(payload) {

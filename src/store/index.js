@@ -42,16 +42,9 @@ const store = createStore({
     getS3Token(state){
       return state.s3
     },
-    getFileById: (state) => (id) => {
-      return state.data.files.find(file => file.id === id)
-    },
     getConfigs: (state) => {
       return state.data.files
     },
-    getTransactionByFileId: (state) => (fileId) => {
-      const file = state.data.files.find(file => file.id === fileId)
-      return file ? file.transaction[0] : null
-    }
   },
   mutations: {
     setGoogleToken (state, token) {
