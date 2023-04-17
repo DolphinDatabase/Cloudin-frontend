@@ -29,7 +29,7 @@
           class="h-5 w-5 text-black"
         />
       </DisclosureButton>
-      <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-gray-100">
+      <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-white-100">
         <div
           v-if="status != 'Concluido'"
           class="flex flex-col justify-center items-center gap-6"
@@ -51,25 +51,25 @@
         <div v-else>
           <p>Criado: {{ created }}</p>
           <br>
-          <div class="bg-white-100 rounded-lg">
+          <div class=" border rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
               <thead>
                 <tr>
                   <th
                     scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
                   >
                     Transação
                   </th>
                   <th
                     scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
                   >
                     Data e Hora
                   </th>
                   <th
                     scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
                   >
                     Status
                   </th>
@@ -77,26 +77,26 @@
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr
-                  v-for="transaction in transactions" 
-                  :key="transaction.id"
+                  v-for="t in transactions" 
+                  :key="t.id"
                 >
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
                       <div class="ml-4">
                         <div class="text-sm font-medium text-gray-900">
-                          {{ transaction.id }}
+                          {{ t.id }}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-900">
-                      {{ transaction.created }}
+                      {{ t.created }}
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-900">
-                      {{ transaction.status }}
+                      {{ t.status }}
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -146,10 +146,6 @@ export default {
       required: true,
     },
     originFolder: {
-      type: String,
-      required: true,
-    },
-    created: {
       type: String,
       required: true,
     },

@@ -6,7 +6,7 @@
     @clickPageButton="showCollapse = true"
   >
     <div
-      v-if="transfers.length <= 0 && !showCollapse"
+      v-if="transactions.length <= 0 && !showCollapse"
       class="flex justify-center items-center flex-col"
     >
       <img
@@ -33,11 +33,10 @@
         :key="t.id"
         :destiny="t.destiny"
         :origin="t.origin"
-        :status="transaction.status"
+        :status="t.transaction[t.transaction.length-1].status"
         :destiny-folder="t.destinyFolder"
         :origin-folder="t.originFolder"
-        :created="transaction.created"
-        :transactions="transaction"
+        :transactions="t.transaction"
       />
     </div>
   </BasePage>
@@ -81,15 +80,8 @@ export default {
   },
   created() {
     this.transfers = this.$store.getters.getAllFiles
-    this.transactions[this.transactions.length = 0] = this.$store.getters.getFileById(1)
-  },
-  mounted() {
-    api.get(`/transaction/${window.localStorage.getItem("id")}`)
-      .then((res) => {
-        for (let t in res.data) {
-          this.transactions.push(res.data[t])
-        }
-      })
+    this.transactions = this.$store.getters.getConfigs
+    console.log(this.transactions)
   },
   methods: {
     newTransaction(payload) {

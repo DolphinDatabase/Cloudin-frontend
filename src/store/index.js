@@ -37,8 +37,8 @@ const store = createStore({
     getFileById: (state) => (id) => {
       return state.data.files.find(file => file.id === id)
     },
-    getAllFiles: (state, getters) => {
-      return getters.getFileById.length
+    getConfigs: (state) => {
+      return state.data.files
     },
     getTransactionByFileId: (state) => (fileId) => {
       const file = state.data.files.find(file => file.id === fileId)
