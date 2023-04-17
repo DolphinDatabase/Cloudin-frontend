@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[100%]">
+  <div class="w-[100%] mb-6">
     <Disclosure v-slot="{ open }">
       <DisclosureButton
         class="shadow flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium">
@@ -44,7 +44,7 @@ import { ChevronUpIcon,  } from '@heroicons/vue/20/solid'
 import { ExclamationCircleIcon, DocumentMagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import DropDown from '@/components/Dropdown.vue'
 import api from '@/services/api'
-import TableCheck from '@/components/TableCheck.vue'
+import TableCheck from '@/components/tables/TableCheck.vue'
 export default {
   name: "CardCollapseNew",
   components: {

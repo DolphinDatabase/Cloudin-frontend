@@ -6,7 +6,7 @@
     @clickPageButton="showCollapse = true"
   >
     <div
-      v-if="this.transactions.length <= 0 && !showCollapse"
+      v-if="transactions.length <= 0 && !showCollapse"
       class="flex justify-center items-center flex-col"
     >
       <img
@@ -23,72 +23,91 @@
 
     <div v-if="showCollapse">
       <div class="contents">
-        <CardCollapseNew v-on="eventsHandler"/>
+        <CardCollapseNew v-on="eventsHandler" />
       </div>
     </div>
 
-    <div class="mt-8">
-      <TransactionCard v-for="t in this.transactions" :key="t.id" :destiny="t.destiny" :origin="t.origin" :status="t.status"/>
+    <div>
+      <TransactionCard
+        v-for="t in transactions"
+        :key="t.id"
+        :destiny="t.destiny"
+        :origin="t.origin"
+        :status="t.transaction[t.transaction.length-1].status"
+        :destiny-folder="t.destinyFolder"
+        :origin-folder="t.originFolder"
+        :transactions="t.transaction"
+      />
     </div>
-    
   </BasePage>
 </template>
 
 <script>
 import BasePage from '@/components/layout/BasePage.vue';
-import CardCollapseNew from '@/components/CardCollapseNew.vue'
-import TransactionCard from '@/components/TransactionCard.vue'
+import CardCollapseNew from '@/components/cards/CardCollapseNew.vue'
+import TransactionCard from '@/components/cards/TransactionCard.vue'
 import api from '@/services/api';
 import notify from '@/utils/notification'
+import { mapGetters } from 'vuex';
+
 export default {
   name: "TransferView",
   components: {
     BasePage,
     CardCollapseNew,
-    TransactionCard
-  },
-  mounted(){
-    api.get(`/transaction/${window.localStorage.getItem("id")}`)
-    .then((res) => {
-      for(let t in res.data){
-        this.transactions.push(res.data[t])
-      }
-    })
+    TransactionCard,
   },
   data() {
     return {
       transfers: 0,
-      transactions:[],
+      transactions: [],
       showCollapse: false,
       eventsHandler: {
         newTransaction: this.newTransaction,
-      }
+      },
     }
   },
+  computed: {
+    ...mapGetters([
+      'getFileById', 'getAllFiles', 'getTransactionById'
+    ]),
+    file() {
+      return this.$store.getters.getFileById(1)
+    },
+    transaction() {
+      return this.$store.getters.getTransactionByFileId(1)
+    }
+  },
+  created() {
+    this.transfers = this.$store.getters.getAllFiles
+    this.transactions = this.$store.getters.getConfigs
+    console.log(this.transactions)
+  },
   methods: {
-    newTransaction(payload){
+    newTransaction(payload) {
       this.transactions.push(payload);
       this.showCollapse = false;
 
       api.post("/transaction/", payload.data, payload.headers)
-      .then((res)=>{
-        for(let i in res.data){
-          if("error" in res.data[i]){
-            this.newTransactionStatus({ origin:this.origin, destiny:this.destiny, status:"Erro" });
-          }else{
-            this.newTransactionStatus({ origin:this.origin, destiny:this.destiny, status:"Concluido"});
+        .then((res) => {
+          for (let i in res.data) {
+            if ("error" in res.data[i]) {
+              this.newTransactionStatus({ origin: this.origin, destiny: this.destiny, status: "Erro" });
+            } else {
+              this.newTransactionStatus({ origin: this.origin, destiny: this.destiny, status: "Concluido" });
+            }
           }
-        }
-      })
+        })
 
     },
-    newTransactionStatus(data){
-      if(data.status == "Erro"){
-        notify({title:"Falha na transferência",text:"Verifique seus arquivos",icon:"erro"})
-      }else{
-        notify({title:"Transferência concluída",text:"Todos os arquivos transferidos",icon:"concluido"})
+    newTransactionStatus(data) {
+      if (data.status == "Erro") {
+        notify({ title: "Falha na transferência", text: "Verifique seus arquivos", icon: "erro" })
+      } else {
+        notify({ title: "Transferência concluída", text: "Todos os arquivos transferidos", icon: "concluido" })
       }
-      this.transactions[this.transactions.length-1]=data
+      this.transactions[this.transactions.length - 1] = data
+
     }
   }
 }
