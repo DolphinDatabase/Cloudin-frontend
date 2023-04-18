@@ -48,6 +48,7 @@ import CardCollapseNew from '@/components/cards/CardCollapseNew.vue'
 import TransactionCard from '@/components/cards/TransactionCard.vue'
 import api from '@/services/api';
 import notify from '@/utils/notification'
+import { mapState } from 'vuex'
 
 export default {
   name: "TransferView",
@@ -55,6 +56,19 @@ export default {
     BasePage,
     CardCollapseNew,
     TransactionCard,
+  },
+  computed:{
+    ...mapState({
+      config: state => state.data.files
+    })
+  },
+  watch:{
+    'config':{
+      deep:true,
+      handler(data){
+        this.transactions = data
+      }
+    }
   },
   data() {
     return {

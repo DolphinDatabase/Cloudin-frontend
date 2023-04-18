@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import api from '@/services/api'
 
 const store = createStore({
   state() {
@@ -6,41 +7,16 @@ const store = createStore({
       data: {
         google:null,
         s3:null,
-        files: [
-          {
-            "destiny": "google",
-            "destinyFolder": "1vsYhJi34hozGjnsWvHeeAq2QyA8vbATl",
-            "destinyToken": "ya29.a0Ael9sCNAgLOdDwcQlHsLgzlEO8i2SLPpCYRvDkGKPcWUDvNM2hk5xvMEbRApi_oYe4yxPpblpPOmvUbw_bcr1dAQt9SRnwFb_glURg_WDiiFcRW3jcVKiXZ1V4OhJ5AkYgOBrhdQTQQ3mNIaQvLuY7xJNko8aCgYKAQgSARESFQF4udJhC10YkDvFHgiYLQST_HbvEA0163",
-            "id": 1,
-            "origin": "s3",
-            "originFolder": "pastaTeste",
-            "originToken": "AKIA4VVR7RPQYTILT3MO LXYAbeTX6zwfoCdGh4LiAZVEjPwEMvC6ICEBSnDi us-east-1 cloudin-bucket",
-            "transaction": [
-              {
-                "created": "2023-04-12T23:16:27",
-                "file": [
-                  {
-                    "id": 1,
-                    "name": "CamScanner 04-11-2023 18.55.pdf",
-                    "size": "312732.0",
-                    "time": "00:00:04"
-                  }
-                ],
-                "id": 1,
-                "status": "Concluido"
-              }
-            ]
-          }
-        ]
+        files: []
       }
     }
   },
   getters: {
     getGoogleToken(state){
-      return state.google
+      return state.data.google
     },
     getS3Token(state){
-      return state.s3
+      return state.data.s3
     },
     getConfigs: (state) => {
       return state.data.files
@@ -52,6 +28,18 @@ const store = createStore({
     },
     setS3Token (state, token) {
       state.s3 = token
+    },
+    setFiles(state,data){
+      state.data.files = data
+    },
+    newTransaction(state,data){
+      var index = state.data.files.findIndex(config=>config.id==data.config)
+      state.data.files[index].transaction.push(data.transaction)
+    },
+    updateTransaction(state,data){
+      var configIndex = state.data.files.findIndex(config=>config.id==data.config)
+      var transactionIndex = state.data.files[configIndex].transaction.findIndex(trn=>trn.id==data.transaction.id)
+      state.data.files[configIndex].transaction[transactionIndex] = data.transaction
     }
   },
   actions: {
@@ -60,6 +48,13 @@ const store = createStore({
     },
     updateS3Token (context, token) {
       context.commit('setS3Token', token)
+    },
+    fetchConfig (context) {
+      api.get("/config")
+      .then((res)=>{
+        console.log(res.data)
+        context.commit('setFiles',res.data)
+      })
     }
   },
   modules: {
