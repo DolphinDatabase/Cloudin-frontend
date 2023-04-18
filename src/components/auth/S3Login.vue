@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import CardComponent from '@/components/CardComponent.vue'
+import CardComponent from '@/components/cards/CardComponent.vue'
 import S3Popup from './S3Popup.vue';
 
 export default {

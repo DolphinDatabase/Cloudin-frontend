@@ -22,7 +22,7 @@
             <p class="text-sm lg:text-base ">Adicionar</p>
           </button>
         </div>
-        <div class="mt-8 flex justify-center flex-col">
+        <div class="mt-6 flex justify-center flex-col">
           <slot />
         </div>
       </div>
