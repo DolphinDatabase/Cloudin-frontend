@@ -33,7 +33,7 @@
         :key="t.id"
         :destiny="t.destiny"
         :origin="t.origin"
-        :status="t.transaction[t.transaction.length-1].status"
+        :status="(t.transaction.length>0)?t.transaction[t.transaction.length-1].status:'Concluido'"
         :destiny-folder="t.destinyFolder"
         :origin-folder="t.originFolder"
         :transactions="t.transaction"
