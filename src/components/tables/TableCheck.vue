@@ -13,37 +13,32 @@
           >
         </div>
       </div>
-        <table class="w-[530px] flex flex-col">
-          <thead>
-            <tr class="flex border-b-2 border-black">
-              <th>
-                <input
-                  v-model="select_all"
-                  type="checkbox"
-                  @click="select"
-                >
-              </th>
-              <th class="mr-56">Nome do arquivo</th>
-              <th>Tamanho (kb)</th>
-            </tr>
-          </thead>
-          <tbody class="block h-[300px] overflow-auto">
-            <tr
-              v-for="d in filtred"
-              :key="d.id"
-            >
-              <td>
-                <input
-                  v-model="selected"
-                  type="checkbox"
-                  :value="d.id"
-                >
-              </td>
-              <td> {{ d.name }}</td>
-              <td>{{ (d.size) ? d.size : "-" }}</td>
-            </tr>
-          </tbody>
-        </table>
+      <table class="w-[530px] flex flex-col">
+        <thead>
+          <tr class="flex border-b-2 border-black">
+            <th class="mr-56">
+              Nome do arquivo
+            </th>
+            <!-- <th>Tamanho (kb)</th> -->
+          </tr>
+        </thead>
+        <tbody class="block h-[300px] overflow-auto">
+          <tr
+            v-for="d in filtred"
+            :key="d.id"
+          >
+            <td>
+              <input
+                v-model="selected"
+                type="radio"
+                :value="d.id"
+              >
+            </td>
+            <td> {{ d.name }}</td>
+            <!-- <td>{{ (d.size) ? d.size : "-" }}</td> -->
+          </tr>
+        </tbody>
+      </table>
       <!-- </div> -->
     </div>
   </div>

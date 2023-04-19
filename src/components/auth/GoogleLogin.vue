@@ -43,7 +43,7 @@ export default {
             axios.post("https://oauth2.googleapis.com/token",data)
             .then(res=>{
                 this.$store.dispatch("updateGoogleToken",res.data.refresh_token)
-                console.log(res.data.refresh_token)
+                this.$store.dispatch("updateGoogleAccessToken",res.data.access_token)
             })
         }
     }

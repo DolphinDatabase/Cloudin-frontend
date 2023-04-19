@@ -6,6 +6,7 @@ const store = createStore({
     return {
       data: {
         google:null,
+        google_access:null,
         s3:null,
         files: []
       }
@@ -14,6 +15,9 @@ const store = createStore({
   getters: {
     getGoogleToken(state){
       return state.data.google
+    },
+    getGoogleAccessToken(state) {
+      return state.data.google_access
     },
     getS3Token(state){
       return state.data.s3
@@ -24,10 +28,13 @@ const store = createStore({
   },
   mutations: {
     setGoogleToken (state, token) {
-      state.google = token
+      state.data.google = token
+    },
+    setGoogleAccessToken (state, token) {
+      state.data.google_access = token
     },
     setS3Token (state, token) {
-      state.s3 = token
+      state.data.s3 = token
     },
     setFiles(state,data){
       state.data.files = data
@@ -45,6 +52,9 @@ const store = createStore({
   actions: {
     updateGoogleToken (context, token) {
       context.commit('setGoogleToken', token)
+    },
+    updateGoogleAccessToken (context, token) {
+      context.commit('setGoogleAccessToken', token)
     },
     updateS3Token (context, token) {
       context.commit('setS3Token', token)

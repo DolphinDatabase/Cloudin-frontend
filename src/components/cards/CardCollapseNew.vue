@@ -2,39 +2,62 @@
   <div class="w-[100%] mb-6">
     <Disclosure v-slot="{ open }">
       <DisclosureButton
-        class="shadow flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium">
+        class="shadow flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium"
+      >
         <div class="flex gap-2 items-center">
           <ExclamationCircleIcon class="h-5 w-5" />
-          <p class="font-bold">Preencha os campos cuidadosamente</p>
+          <p class="font-bold">
+            Preencha os campos cuidadosamente
+          </p>
         </div>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-black" />
+        <ChevronUpIcon
+          :class="open ? 'rotate-180 transform' : ''"
+          class="h-5 w-5 text-black"
+        />
       </DisclosureButton>
       <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-gray-100">
         <div class="flex justify-between mb-2">
           <div>
             <p>De:</p>
-            <DropDown :list="[{ nome: 'Google' }, { nome: 'S3' }]" @onSelect="(e) => { origin = e }" />
+            <DropDown
+              :list="[{ nome: 'Google' }, { nome: 'S3' }]"
+              @onSelect="(e) => { origin = e }"
+            />
           </div>
           <ArrowSmallRightIcon />
           <div>
             <p>Para:</p>
-            <DropDown :list="[{ nome: 'Google' }, { nome: 'S3' }]" @onSelect="(e) => { destiny = e }" />
+            <DropDown
+              :list="[{ nome: 'Google' }, { nome: 'S3' }]"
+              @on-select="(e) => { destiny = e }"
+            />
           </div>
         </div>
         <div class="flex justify-center">
-          <button class="bg-green-500 text-white-100 py-2 px-4 rounded flex gap-2" @click="chooseFiles()">
-            <DocumentMagnifyingGlassIcon class="w-5 h-5"/>
+          <button
+            class="bg-green-500 text-white-100 py-2 px-4 rounded flex gap-2"
+            @click="chooseFolder()"
+          >
+            <DocumentMagnifyingGlassIcon class="w-5 h-5" />
             Escolher arquivos
           </button>
         </div>
       </DisclosurePanel>
     </Disclosure>
-    <!-- <img src="@/assets/emAndamento.svg">
-    <img src="@/assets/erro.svg"> -->
   </div>
-  <ModalComponent title="Selecione Arquivos para a transferência" :open="modal" @closeModal="() => { modal = false }"
-    @submitData="() => { submitTransaction() }">
-    <TableCheck ref="table" :data="this.files" />
+  <ModalComponent
+    title="Selecione a pasta para a transferência automática"
+    :open="modal"
+    :origin="origin"
+    :destiny="destiny"
+    @close-modal="() => { modal = false }"
+    @submit-data="() => { submitTransaction() }"
+    @next="() => { next() }"
+  >
+    <TableCheck
+      ref="table"
+      :data="files"
+    />
   </ModalComponent>
 </template>
 <script>
@@ -58,6 +81,7 @@ export default {
     ExclamationCircleIcon,
     DocumentMagnifyingGlassIcon
   },
+  emits: ["newTransaction", "updateStatus"],
   data() {
     return {
       origin: '',
@@ -69,11 +93,14 @@ export default {
       showDataDiv: true
     }
   },
-  emits: ["newTransaction", "updateStatus"],
   methods: {
+    next() {
+      
+
+    },
     submitTransaction() {
       this.modal = false
-      var selected = []
+      let selected = []
       this.$refs.table.selected.forEach(file => {
         let s = this.files.filter(
           (f) => { return f.id == file }
@@ -81,12 +108,12 @@ export default {
         selected.push({ file_id: s[0].id, file_name: s[0].name })
       });
 
-      var data = {
+      let data = {
         origin: this.origin,
         destiny: this.destiny,
         files: selected
       }
-      var headers = {
+      let headers = {
         headers: {
           origin_token: "",
           destiny_token: "",
@@ -95,10 +122,10 @@ export default {
       }
       let tokenHandler = {
         "google": () => {
-          return window.localStorage.getItem("google")
+          return this.$store.getters.getGoogleAccessToken
         },
         "s3": () => {
-          let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
+          let s3Auth = JSON.parse(this.$store.getters.getS3Token)
           return `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
         }
       }
@@ -108,27 +135,28 @@ export default {
 
       this.$emit("newTransaction",{ origin:this.origin, destiny:this.destiny, status:"Em andamento", data: data, headers: headers })
     },
-    async listFiles() {
-      var tk = ""
+    async listFolders() {
+      let tk = ""
       if (this.origin == "google") {
-        tk += window.localStorage.getItem("google")
-      } else if (this.origin == "s3") {
-        let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
+        tk += this.$store.getters.getGoogleAccessToken
+      } else if (this.origin == "s3" ) {
+        let s3Auth = JSON.parse(this.$store.getters.getS3Token)
         tk +=  `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
       }
-      const res = await api.get("/" + this.origin + "/list", {
+      const res = await api.get("/" + this.origin + "/list/folder", {
         headers: {
           token: tk
         }
       })
+
       this.files = res.data.result
       this.modal = true
     },
-    chooseFiles() {
+    chooseFolder() {
       if (!this.origin || !this.destiny) {
         console.error("no drives selected")
       } else {
-        this.listFiles()
+        this.listFolders()
       }
     }
   }
