@@ -30,25 +30,7 @@
         />
       </DisclosureButton>
       <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-white-100">
-        <div
-          v-if="status != 'Concluido'"
-          class="flex flex-col justify-center items-center gap-6"
-        >
-          <img
-            :src="myImage"
-            alt=""
-            :class="imageClass"
-          >
-          <div class="flex flex-col gap-2 items-center">
-            <p class="font-bold lg:text-lg">
-              {{ myMessage }}
-            </p>
-            <p class="font-light text-gray-201">
-              {{ mySubtitle }}
-            </p>
-          </div>
-        </div>
-        <div v-else>
+        <div v-if="transactions.length>0">
           <p>Criado: {{ created }}</p>
           <br>
           <div class=" border rounded-lg">
@@ -109,6 +91,7 @@
             </table>
           </div>
         </div>
+        <h5 v-else>Nenhuma transação realizada</h5>
       </DisclosurePanel>
     </Disclosure>
   </div>

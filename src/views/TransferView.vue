@@ -33,7 +33,7 @@
         :key="t.id"
         :destiny="t.destiny"
         :origin="t.origin"
-        :status="t.transaction[t.transaction.length-1].status"
+        :status="(t.transaction.length>0)?t.transaction[t.transaction.length-1].status:'Concluido'"
         :destiny-folder="t.destinyFolder"
         :origin-folder="t.originFolder"
         :transactions="t.transaction"
@@ -48,6 +48,7 @@ import CardCollapseNew from '@/components/cards/CardCollapseNew.vue'
 import TransactionCard from '@/components/cards/TransactionCard.vue'
 import api from '@/services/api';
 import notify from '@/utils/notification'
+import { mapState } from 'vuex'
 
 export default {
   name: "TransferView",
@@ -55,6 +56,19 @@ export default {
     BasePage,
     CardCollapseNew,
     TransactionCard,
+  },
+  computed:{
+    ...mapState({
+      config: state => state.data.files
+    })
+  },
+  watch:{
+    'config':{
+      deep:true,
+      handler(data){
+        this.transactions = data
+      }
+    }
   },
   data() {
     return {
