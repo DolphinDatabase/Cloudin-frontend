@@ -5,6 +5,7 @@ const store = createStore({
   state() {
     return {
       data: {
+        id: null,
         google:null,
         google_access:null,
         s3:null,
@@ -14,19 +15,16 @@ const store = createStore({
   },
   getters: {
     id(state){
-      return state.id;
+      return state.data.id;
     },
-    getGoogleAccessToken(state) {
-      return state.data.google_access
-    },
-    getS3Token(state){
-      return state.data.s3
+    googleAccessToken(state) {
+      return state.data.google_access;
     },
     s3Token(state){
-      return state.s3Token;
+      return state.data.s3;
     },
     configs(state){
-      return state.files;
+      return state.data.files;
     }
   },
   mutations: {
@@ -40,20 +38,20 @@ const store = createStore({
       state.data.s3 = token
     },
     setFiles(state,data){
-      state.files = data
+      state.data.files = data
     },
     newTransaction(state,data){
-      var index = state.files.findIndex(config=>config.id==data.config)
-      state.files[index].transaction.push(data.transaction)
+      var index = state.data.files.findIndex(config=>config.id==data.config)
+      state.data.files[index].transaction.push(data.transaction)
     },
     updateTransaction(state,data){
-      var configIndex = state.files.findIndex(config=>config.id==data.config)
-      var transactionIndex = state.files[configIndex].transaction.findIndex(trn=>trn.id==data.transaction.id)
-      state.files[configIndex].transaction[transactionIndex] = data.transaction
+      var configIndex = state.data.files.findIndex(config=>config.id==data.config)
+      var transactionIndex = state.data.files[configIndex].transaction.findIndex(trn=>trn.id==data.transaction.id)
+      state.data.files[configIndex].transaction[transactionIndex] = data.transaction
     },
     initialiseStore(state) {
 			if(!localStorage.getItem('store')){
-        state.id = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+        state.data.id = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
         return;
       }
       
@@ -74,7 +72,6 @@ const store = createStore({
     fetchConfig (context) {
       api.get("/config")
       .then((res)=>{
-        console.log(res.data)
         context.commit('setFiles',res.data)
       })
     }

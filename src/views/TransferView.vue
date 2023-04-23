@@ -5,7 +5,7 @@
     :show-button="true"
     @clickPageButton="showCollapse = true"
   >
-    <TransactionsDetails title="Transacao 1" create-date="2023-01-01" status="Em Andamento" :files="this.files"/>
+    <!-- <TransactionsDetails title="Transacao 1" create-date="2023-01-01" status="Em Andamento" :files="this.files"/> -->
 
     <div
       v-if="transactions.length <= 0 && !showCollapse"
@@ -51,7 +51,6 @@ import TransactionCard from '@/components/cards/TransactionCard.vue'
 import api from '@/services/api';
 import notify from '@/utils/notification'
 import { mapState } from 'vuex'
-import TransactionsDetails from '@/components/cards/TransactionsDetails.vue';
 
 export default {
   name: "TransferView",
@@ -59,7 +58,6 @@ export default {
     BasePage,
     CardCollapseNew,
     TransactionCard,
-    TransactionsDetails
   },
   computed:{
     ...mapState({

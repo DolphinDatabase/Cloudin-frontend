@@ -2,27 +2,62 @@
     <div>
         <div
             class="popup-background"
-            @click="closePopup()"
+            @click="this.$emit('close')"
         />
 
-        <div class="popup border-d rounded-lg z-[100] p-8 flex flex-col bg-white-200">
-            <p class="grid grid-cols-3">
-                <span> 
-                    {{ this.title }} 
+        <div class="popup rounded-lg bg-white-100 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <p class="grid grid-cols-3 text-gray-700 mb-10">
+                <span class="justify-self-center"> 
+                    Transação {{ this.transaction.id }} 
                 </span>
                 <span class="justify-self-center"> 
-                    {{ this.createDate }}
+                    {{ new Date(transaction.created).toLocaleString('pt-BR') }}
                 </span>
-                <span class="justify-self-end bg-green-500 rounded-xl text-white-200 uppercase text-xs align-middle">
-                    {{ this.status }} 
+                <span class="justify-self-center">
+                    {{ this.transaction.status }} 
                 </span>
             </p>
 
-            <div class="grid grid-cols-2" v-for="file in this.files" :key="file">
-                <span>{{ file.name }}</span>
-                <span class="justify-self-end">{{ this.convertBytesSizeToHumanReadable(file.size) }}</span>
-            </div>
-
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th
+                            scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                        >
+                            Arquivo
+                        </th>
+                        <th
+                            scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                        >
+                            Tamanho
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 overflow-auto">
+                    <tr v-for="file in this.transaction.file" :key="file">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ file.name }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ this.convertBytesSizeToHumanReadable(file.size) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
@@ -31,29 +66,15 @@
 export default {
     name: "TransactionDetails",
     props: {
-        title: {
+        transaction: {
             required: true,
-            type: String
-        },
-        createDate: {
-            required: true,
-            type: Date
-        },
-        status: {
-            required: true,
-            type: String
-        },
-        files: {
-            required: true,
-            type: Array
+            type: Object
         }
     },
     methods: {
         convertBytesSizeToHumanReadable(bytesSize) {
             const PREFIXS = ['k', 'M', 'G', 'T'];
             let multiplier = -1;
-
-            console.log(bytesSize);
 
             while(bytesSize >= 1000 && multiplier < PREFIXS.length) {
                 bytesSize /= 1024;
@@ -67,36 +88,33 @@ export default {
 
             response += 'B';
 
-            console.log(response);
-
             return response;
-        },
-
-        convertDateToHumanReadable(date) {
-            let formattedDate = new Date(date);
-            return formattedDate; 
-        },
-
-        closePopup() {
-            this.$emit("close");
         }
-    },
-    mounted() {
-        console.log(this.files[0]);
     }
 }
 </script>
 
 <style>
-.popup-background {
-  position: fixed;
-  margin: 0;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000000aa;
-  z-index: 99;
-}
+    .popup-background {
+        position: fixed;
+        z-index: 99;
+        margin: 0;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000aa;
+    }
+
+    .popup {
+        position: absolute;
+        z-index: 100;
+
+        top: 25%;
+        bottom: 25%;
+
+        left: 25%;
+        width: 50%;
+    }
 </style>
 

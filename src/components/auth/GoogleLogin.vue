@@ -1,7 +1,7 @@
 <template>
     <button type="button" @click="login()">
         <card-component>
-            <img src="@/assets/auth/Google.svg" class="w-7 mr-2">
+            <img src="@/assets/auth/google.svg" class="w-7 mr-2">
             <p class="cursor-pointer">Autentique com o Google Drive</p>
         </card-component>
     </button>

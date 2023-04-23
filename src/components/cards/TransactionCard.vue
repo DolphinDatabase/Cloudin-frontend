@@ -11,6 +11,9 @@
             alt=""
             class="h-18 w-18"
           >
+          <p class="font-bold text-gray-500">
+            De: {{ originFolder }}
+          </p>
           <ArrowLongRightIcon class="w-5 h-5" />
           <img
             :src="myDestiny"
@@ -18,9 +21,6 @@
             class="h-18 w-18"
           >
         </div>
-        <p class="font-bold text-gray-500">
-          De: {{ originFolder }}
-        </p>
         <p class="font-bold text-gray-500">
           Para: {{ destinyFolder }}
         </p>
@@ -82,7 +82,7 @@
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button class="text-green-500 hover:text-green-900">
+                    <button class="text-green-500 hover:text-green-900" @click="this.details = { transaction: t, show: true }">
                       Ver detalhes
                     </button>
                   </td>
@@ -94,12 +94,14 @@
         <h5 v-else>Nenhuma transação realizada</h5>
       </DisclosurePanel>
     </Disclosure>
+    <TransactionsDetails v-if="this.details.show" :transaction="this.details.transaction" @close="this.details.show = false"/>
   </div>
 </template>
 
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { ChevronUpIcon, ArrowLongRightIcon } from '@heroicons/vue/20/solid'
+import TransactionsDetails from './TransactionsDetails.vue'
 import Erro from '@/assets/erro.svg'
 import Andamento from '@/assets/emAndamento.svg'
 export default {
@@ -110,6 +112,7 @@ export default {
     DisclosurePanel,
     ChevronUpIcon,
     ArrowLongRightIcon,
+    TransactionsDetails
   },
   props: {
     origin: {
@@ -147,13 +150,17 @@ export default {
       myMessage: "",
       mySubtitle: "",
       logos: {
-        "s3": "@/assets/auth/s3-white.svg",
-        "google": "@/assets/auth/Google.svg"
+        "s3": require("@/assets/auth/s3-white.svg"),
+        "google": require("@/assets/auth/google.svg")
       },
       statusHandler: {
         "Em andamento": this.setToEmAndamento,
         "Erro": this.setToErro,
         "Concluido": this.setToConcluido
+      },
+      details: {
+        show: false,
+        transaction: null
       }
     };
   },
@@ -163,12 +170,10 @@ export default {
     },
   },
   mounted() {
-    this.myOrigin = require(this.logos[this.origin]);
-    this.myDestiny = require(this.logos[this.destiny]);
+    this.myOrigin = this.logos[this.origin];
+    this.myDestiny = this.logos[this.destiny];
 
     this.statusHandler[this.status]();
-
-    console.log(this.transactions)
   },
   methods: {
     setToEmAndamento() {
