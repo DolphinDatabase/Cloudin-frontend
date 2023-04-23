@@ -45,6 +45,7 @@ import { ExclamationCircleIcon, DocumentMagnifyingGlassIcon } from '@heroicons/v
 import DropDown from '@/components/Dropdown.vue'
 import api from '@/services/api'
 import TableCheck from '@/components/tables/TableCheck.vue'
+
 export default {
   name: "CardCollapseNew",
   components: {
@@ -66,7 +67,11 @@ export default {
       modal: false,
       selected: [],
       files: [],
-      showDataDiv: true
+      showDataDiv: true,
+      tokenHandler: {
+        "google": () => { return this.$store.getters.googleToken },
+        "s3": () => { return this.$store.getters.s3Token },
+      }
     }
   },
   emits: ["newTransaction", "updateStatus"],
@@ -86,44 +91,29 @@ export default {
         destiny: this.destiny,
         files: selected
       }
+
       var headers = {
         headers: {
-          origin_token: "",
-          destiny_token: "",
-          application: window.localStorage.getItem("id")
+          origin_token: this.tokenHandler[this.origin](),
+          destiny_token: this.tokenHandler[this.destiny](),
+          application: this.$store.getters.id
         }
       }
-      let tokenHandler = {
-        "google": () => {
-          return window.localStorage.getItem("google")
-        },
-        "s3": () => {
-          let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
-          return `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
-        }
-      }
-
-      headers.headers.origin_token = tokenHandler[this.origin]()
-      headers.headers.destiny_token = tokenHandler[this.destiny]()
 
       this.$emit("newTransaction",{ origin:this.origin, destiny:this.destiny, status:"Em andamento", data: data, headers: headers })
     },
-    async listFiles() {
-      var tk = ""
-      if (this.origin == "google") {
-        tk += window.localStorage.getItem("google")
-      } else if (this.origin == "s3") {
-        let s3Auth = JSON.parse(window.localStorage.getItem("s3Auth"))
-        tk +=  `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
-      }
-      const res = await api.get("/" + this.origin + "/list", {
+    
+    listFiles() {
+      api.get("/" + this.origin + "/list", {
         headers: {
-          token: tk
+          token: this.tokenHandler[this.origin]()
         }
+      }).then((res) => {
+        this.files = res.data.result
+        this.modal = true
       })
-      this.files = res.data.result
-      this.modal = true
     },
+
     chooseFiles() {
       if (!this.origin || !this.destiny) {
         console.error("no drives selected")

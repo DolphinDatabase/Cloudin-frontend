@@ -4,43 +4,54 @@ import api from '@/services/api'
 const store = createStore({
   state() {
     return {
-      data: {
-        google:null,
-        s3:null,
-        files: []
-      }
+      id: null,
+      googleToken: null,
+      s3Token: null,
+      files: []
     }
   },
   getters: {
-    getGoogleToken(state){
-      return state.data.google
+    id(state){
+      return state.id;
     },
-    getS3Token(state){
-      return state.data.s3
+    googleToken(state){
+      return state.googleToken;
     },
-    getConfigs: (state) => {
-      return state.data.files
+    s3Token(state){
+      return state.s3Token;
     },
+    configs(state){
+      return state.files;
+    }
   },
   mutations: {
     setGoogleToken (state, token) {
-      state.google = token
+      state.googleToken = token;
     },
     setS3Token (state, token) {
-      state.s3 = token
+      state.s3Token = token;
     },
     setFiles(state,data){
-      state.data.files = data
+      state.files = data
     },
     newTransaction(state,data){
-      var index = state.data.files.findIndex(config=>config.id==data.config)
-      state.data.files[index].transaction.push(data.transaction)
+      var index = state.files.findIndex(config=>config.id==data.config)
+      state.files[index].transaction.push(data.transaction)
     },
     updateTransaction(state,data){
-      var configIndex = state.data.files.findIndex(config=>config.id==data.config)
-      var transactionIndex = state.data.files[configIndex].transaction.findIndex(trn=>trn.id==data.transaction.id)
-      state.data.files[configIndex].transaction[transactionIndex] = data.transaction
-    }
+      var configIndex = state.files.findIndex(config=>config.id==data.config)
+      var transactionIndex = state.files[configIndex].transaction.findIndex(trn=>trn.id==data.transaction.id)
+      state.files[configIndex].transaction[transactionIndex] = data.transaction
+    },
+    initialiseStore(state) {
+			if(!localStorage.getItem('store')){
+        state.id = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+        return;
+      }
+      
+      let storageState = JSON.parse(localStorage.getItem('store'));
+      this.replaceState(Object.assign(state, storageState));
+		}
   },
   actions: {
     updateGoogleToken (context, token) {
@@ -56,8 +67,13 @@ const store = createStore({
         context.commit('setFiles',res.data)
       })
     }
-  },
-  modules: {
   }
 })
+
+store.commit('initialiseStore');
+
+store.subscribe((mutation, state) => {
+  localStorage.setItem('store', JSON.stringify(state));
+});
+
 export default store;

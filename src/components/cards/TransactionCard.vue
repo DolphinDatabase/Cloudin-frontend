@@ -146,50 +146,47 @@ export default {
       imageClass: "",
       myMessage: "",
       mySubtitle: "",
-      Erro,
-      Andamento
+      logos: {
+        "s3": "@/assets/auth/s3-white.svg",
+        "google": "@/assets/auth/Google.svg"
+      },
+      statusHandler: {
+        "Em andamento": this.setToEmAndamento,
+        "Erro": this.setToErro,
+        "Concluido": this.setToConcluido
+      }
     };
   },
   watch: {
     status: function () {
-      this.updateClass();
+      this.statusHandler[this.status]();
     },
   },
   mounted() {
-    if (this.origin === "s3") {
-      this.myOrigin = require("@/assets/auth/s3-white.svg");
-    } else {
-      this.myOrigin = require("@/assets/auth/Google.svg");
-    }
-    if (this.destiny === "google") {
-      this.myDestiny = require("@/assets/auth/Google.svg");
-    } else {
-      this.myDestiny = require("@/assets/auth/s3-white.svg");
-    }
-    this.updateClass();
+    this.myOrigin = require(this.logos[this.origin]);
+    this.myDestiny = require(this.logos[this.destiny]);
+
+    this.statusHandler[this.status]();
+
     console.log(this.transactions)
   },
   methods: {
-    updateClass() {
-      if (this.status === "Concluido") {
-        this.myClass =
-          "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100 card-concluido";
-      } else if (this.status === "Erro") {
-        this.myClass =
-          "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100  card-falha";
-        this.myImage = Erro;
-        this.imageClass = "w-[400px]"
-        this.myMessage = "OOPS..."
-        this.mySubtitle = "Parece que houve algum erro de conexão!"
-      } else {
-        this.myClass =
-          "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100  card-andamento";
-
-        this.myImage = Andamento;
-        this.imageClass = "w-[300px]"
-        this.myMessage = "Sua transferência está em andamento"
-        this.mySubtitle = "chegará uma notificação quando estiver tudo pronto :)"
-      }
+    setToEmAndamento() {
+      this.myClass = "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100 card-andamento";
+      this.myImage = Andamento;
+      this.imageClass = "w-[300px]";
+      this.myMessage = "Sua transferência está em andamento";
+      this.mySubtitle = "chegará uma notificação quando estiver tudo pronto :)";
+    },
+    setToErro() {
+      this.myClass = "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100 card-falha";
+      this.myImage = Erro;
+      this.imageClass = "w-[400px]";
+      this.myMessage = "OOPS...";
+      this.mySubtitle = "Parece que houve algum erro de conexão!";
+    },
+    setToConcluido() {
+      this.myClass = "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100 card-concluido";
     },
   }
 }
