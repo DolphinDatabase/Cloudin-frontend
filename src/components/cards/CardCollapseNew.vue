@@ -36,7 +36,7 @@
         <div class="flex justify-center">
           <button
             class="bg-green-500 text-white-100 py-2 px-4 rounded flex gap-2"
-            @click="chooseFolder()"
+            @click="chooseFolderOrigin()"
           >
             <DocumentMagnifyingGlassIcon class="w-5 h-5" />
             Escolher arquivos
@@ -45,29 +45,26 @@
       </DisclosurePanel>
     </Disclosure>
   </div>
-  <ModalComponent
-    title="Selecione a pasta para a transferência automática"
-    :open="modal"
-    :origin="origin"
-    :destiny="destiny"
-    @close-modal="() => { modal = false }"
-    @submit-data="() => { submitTransaction() }"
-    @next="() => { next() }"
-  >
-    <TableCheck
+  <ModalComponent :open="modal">
+    <TableFolder
       ref="table"
-      :data="files"
+      :origin="origin"
+      :destiny="destiny"
+      :origin-data="foldersOrigin"
+      :destiny-data="foldersDestiny"
+      @close-modal="() => { modal = false }"
+      @submit-data="() => {submitTransaction()}"
     />
   </ModalComponent>
 </template>
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import ModalComponent from '@/components/Modal.vue'
-import { ChevronUpIcon,  } from '@heroicons/vue/20/solid'
+import { ChevronUpIcon, } from '@heroicons/vue/20/solid'
 import { ExclamationCircleIcon, DocumentMagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import DropDown from '@/components/Dropdown.vue'
 import api from '@/services/api'
-import TableCheck from '@/components/tables/TableCheck.vue'
+import TableFolder from '../tables/TableFolder.vue'
 export default {
   name: "CardCollapseNew",
   components: {
@@ -77,9 +74,9 @@ export default {
     ChevronUpIcon,
     DropDown,
     ModalComponent,
-    TableCheck,
     ExclamationCircleIcon,
-    DocumentMagnifyingGlassIcon
+    DocumentMagnifyingGlassIcon,
+    TableFolder
   },
   emits: ["newTransaction", "updateStatus"],
   data() {
@@ -89,59 +86,39 @@ export default {
       status: '',
       modal: false,
       selected: [],
-      files: [],
-      showDataDiv: true
+      foldersOrigin: [],
+      foldersDestiny: [],
+      showDataDiv: true,
+      originToken: null,
+      destinyToken: null
     }
   },
   methods: {
-    next() {
-      
-
-    },
-    submitTransaction() {
+    async submitTransaction() {
       this.modal = false
-      let selected = []
-      this.$refs.table.selected.forEach(file => {
-        let s = this.files.filter(
-          (f) => { return f.id == file }
-        )
-        selected.push({ file_id: s[0].id, file_name: s[0].name })
-      });
+      this.selectedOrigin = this.$refs.table.selectedOrigin
+      this.selectedDestiny = this.$refs.table.selectedDestiny
 
       let data = {
         origin: this.origin,
         destiny: this.destiny,
-        files: selected
+        originFolder: this.selectedOrigin,
+        destinyFolder: this.selectedDestiny,
+        originToken: this.originToken,
+        destinyToken: this.destinyToken
       }
-      let headers = {
-        headers: {
-          origin_token: "",
-          destiny_token: "",
-          application: window.localStorage.getItem("id")
-        }
-      }
-      let tokenHandler = {
-        "google": () => {
-          return this.$store.getters.getGoogleAccessToken
-        },
-        "s3": () => {
-          let s3Auth = JSON.parse(this.$store.getters.getS3Token)
-          return `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
-        }
-      }
-
-      headers.headers.origin_token = tokenHandler[this.origin]()
-      headers.headers.destiny_token = tokenHandler[this.destiny]()
-
-      this.$emit("newTransaction",{ origin:this.origin, destiny:this.destiny, status:"Em andamento", data: data, headers: headers })
+      await api.post("/config/", data)
+      this.$store.dispatch("fetchConfig")
     },
-    async listFolders() {
+    async listFoldersOrigin() {
       let tk = ""
       if (this.origin == "google") {
         tk += this.$store.getters.getGoogleAccessToken
-      } else if (this.origin == "s3" ) {
-        let s3Auth = JSON.parse(this.$store.getters.getS3Token)
-        tk +=  `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
+        this.originToken = this.$store.getters.getGoogleToken
+      } else if (this.origin == "s3") {
+        let s3Auth = this.$store.getters.getS3Token
+        tk += `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
+        this.originToken = tk
       }
       const res = await api.get("/" + this.origin + "/list/folder", {
         headers: {
@@ -149,15 +126,35 @@ export default {
         }
       })
 
-      this.files = res.data.result
+      this.foldersOrigin = res.data.result
       this.modal = true
     },
-    chooseFolder() {
+    chooseFolderOrigin() {
       if (!this.origin || !this.destiny) {
         console.error("no drives selected")
       } else {
-        this.listFolders()
+        this.listFoldersOrigin()
+        this.listFoldersDestiny()
       }
+    },
+    async listFoldersDestiny() {
+      let tk = ""
+      if (this.destiny == "google") {
+        tk += this.$store.getters.getGoogleAccessToken
+        this.destinyToken = this.$store.getters.getGoogleToken
+      } else if (this.destiny == "s3") {
+        let s3Auth = this.$store.getters.getS3Token
+        tk += `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
+        this.destinyToken = tk
+      }
+      const res = await api.get("/" + this.destiny + "/list/folder", {
+        headers: {
+          token: tk
+        }
+      })
+
+      this.foldersDestiny = res.data.result
+      this.modal = true
     }
   }
 }
