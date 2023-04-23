@@ -61,13 +61,14 @@ export default {
   },
   computed:{
     ...mapState({
-      config: state => state.files
+      config: state => state.data.files
     })
   },
   watch:{
     'config':{
       deep:true,
       handler(data){
+        console.log(data)
         this.transactions = data
       }
     }
