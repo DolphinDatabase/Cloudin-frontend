@@ -5,6 +5,8 @@
     :show-button="true"
     @clickPageButton="showCollapse = true"
   >
+    <!-- <TransactionsDetails title="Transacao 1" create-date="2023-01-01" status="Em Andamento" :files="this.files"/> -->
+
     <div
       v-if="transactions.length <= 0 && !showCollapse"
       class="flex justify-center items-center flex-col"
@@ -33,7 +35,7 @@
         :key="t.id"
         :destiny="t.destiny"
         :origin="t.origin"
-        :status="t.transaction[t.transaction.length-1].status"
+        :status="(t.transaction.length>0)?t.transaction[t.transaction.length-1].status:'Concluido'"
         :destiny-folder="t.destinyFolder"
         :origin-folder="t.originFolder"
         :transactions="t.transaction"
@@ -66,6 +68,7 @@ export default {
     'config':{
       deep:true,
       handler(data){
+        console.log(data)
         this.transactions = data
       }
     }
@@ -77,10 +80,20 @@ export default {
       eventsHandler: {
         newTransaction: this.newTransaction,
       },
+      files: [
+        {
+          name: "teste",
+          size: 15584115
+        },
+        {
+          name: "teste 123",
+          size: 1231
+        }
+      ]
     }
   },
   created() {
-    this.transactions = this.$store.getters.getConfigs
+    this.transactions = this.$store.getters.configs
   },
   methods: {
     newTransaction(payload) {
@@ -97,7 +110,6 @@ export default {
             }
           }
         })
-
     },
     newTransactionStatus(data) {
       if (data.status == "Erro") {
@@ -106,7 +118,6 @@ export default {
         notify({ title: "Transferência concluída", text: "Todos os arquivos transferidos", icon: "concluido" })
       }
       this.transactions[this.transactions.length - 1] = data
-
     }
   }
 }
