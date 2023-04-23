@@ -47,23 +47,34 @@ export default {
   data() {
     return {
       s3Auth: {
-        "awsAccessKeyId": null,
-        "awsSecretAccessKey": null,
-        "awsRegionName": null,
-        "s3BucketName": null
+        awsAccessKeyId: null,
+        awsSecretAccessKey: null,
+        s3BucketName: null,
+        awsRegionName: null
       }
     };
   },
   mounted() {
-    let s3AuthStorage = this.$store.getters.getS3Token;
-    if (s3AuthStorage != null)
-      this.s3Auth = s3AuthStorage;
+    let s3Token = this.$store.getters.s3Token;
+    
+    if(s3Token && s3Token.split(' ').length == 4){
+      this.s3Auth = {
+        awsAccessKeyId: s3Token.split(' ')[0],
+        awsSecretAccessKey: s3Token.split(' ')[1],
+        s3BucketName: s3Token.split(' ')[2],
+        awsRegionName: s3Token.split(' ')[3]
+      }
+    }
   },
   methods: {
     saveS3Auth() {
-      this.$store.dispatch("updateS3Token",this.s3Auth)
+      if(this.s3Auth.awsAccessKeyId && this.s3Auth.awsSecretAccessKey && this.s3Auth.awsRegionName && this.s3Auth.s3BucketName) {
+        let s3Token = `${this.s3Auth.awsAccessKeyId} ${this.s3Auth.awsSecretAccessKey} ${this.s3Auth.awsRegionName} ${this.s3Auth.s3BucketName}`;
+        this.$store.dispatch("updateS3Token", s3Token);
+      }
       this.closePopup();
     },
+
     closePopup() {
       this.$emit("close");
     }

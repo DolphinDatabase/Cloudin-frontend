@@ -90,7 +90,11 @@ export default {
       foldersDestiny: [],
       showDataDiv: true,
       originToken: null,
-      destinyToken: null
+      destinyToken: null,
+      tokenHandler: {
+        "google": () => { return this.$store.getters.googleAccessToken },
+        "s3": () => { return this.$store.getters.s3Token }
+      }
     }
   },
   methods: {
@@ -104,31 +108,25 @@ export default {
         destiny: this.destiny,
         originFolder: this.selectedOrigin,
         destinyFolder: this.selectedDestiny,
-        originToken: this.originToken,
-        destinyToken: this.destinyToken
+        originToken: this.tokenHandler[this.origin](),
+        destinyToken: this.tokenHandler[this.destiny]()
       }
+
       await api.post("/config/", data)
       this.$store.dispatch("fetchConfig")
     },
-    async listFoldersOrigin() {
-      let tk = ""
-      if (this.origin == "google") {
-        tk += this.$store.getters.getGoogleAccessToken
-        this.originToken = this.$store.getters.getGoogleToken
-      } else if (this.origin == "s3") {
-        let s3Auth = this.$store.getters.getS3Token
-        tk += `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
-        this.originToken = tk
-      }
-      const res = await api.get("/" + this.origin + "/list/folder", {
-        headers: {
-          token: tk
-        }
-      })
 
-      this.foldersOrigin = res.data.result
-      this.modal = true
+    listFoldersOrigin() {
+      api.get(`/${this.origin}/list/folder`, {
+        headers: {
+          token: this.tokenHandler[this.origin]()
+        }
+      }).then((res) => {
+        this.foldersOrigin = res.data.result
+        this.modal = true
+      });
     },
+
     chooseFolderOrigin() {
       if (!this.origin || !this.destiny) {
         console.error("no drives selected")
@@ -137,25 +135,18 @@ export default {
         this.listFoldersDestiny()
       }
     },
-    async listFoldersDestiny() {
-      let tk = ""
-      if (this.destiny == "google") {
-        tk += this.$store.getters.getGoogleAccessToken
-        this.destinyToken = this.$store.getters.getGoogleToken
-      } else if (this.destiny == "s3") {
-        let s3Auth = this.$store.getters.getS3Token
-        tk += `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
-        this.destinyToken = tk
-      }
-      const res = await api.get("/" + this.destiny + "/list/folder", {
-        headers: {
-          token: tk
-        }
-      })
 
-      this.foldersDestiny = res.data.result
-      this.modal = true
+    listFoldersDestiny() {
+      api.get(`/${this.destiny}/list/folder`, {
+        headers: {
+          token: this.tokenHandler[this.destiny]()
+        }
+      }).then((res) => {
+        this.foldersDestiny = res.data.result
+        this.modal = true
+      });
     }
+
   }
 }
 </script>

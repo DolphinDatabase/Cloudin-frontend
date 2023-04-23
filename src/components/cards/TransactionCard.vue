@@ -11,6 +11,9 @@
             alt=""
             class="h-18 w-18"
           >
+          <p class="font-bold text-gray-500">
+            De: {{ originFolder }}
+          </p>
           <ArrowLongRightIcon class="w-5 h-5" />
           <img
             :src="myDestiny"
@@ -18,9 +21,6 @@
             class="h-18 w-18"
           >
         </div>
-        <p class="font-bold text-gray-500">
-          De: {{ originFolder }}
-        </p>
         <p class="font-bold text-gray-500">
           Para: {{ destinyFolder }}
         </p>
@@ -82,7 +82,7 @@
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button class="text-green-500 hover:text-green-900">
+                    <button class="text-green-500 hover:text-green-900" @click="this.details = { transaction: t, show: true }">
                       Ver detalhes
                     </button>
                   </td>
@@ -94,12 +94,14 @@
         <h5 v-else>Nenhuma transação realizada</h5>
       </DisclosurePanel>
     </Disclosure>
+    <TransactionsDetails v-if="this.details.show" :transaction="this.details.transaction" @close="this.details.show = false"/>
   </div>
 </template>
 
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { ChevronUpIcon, ArrowLongRightIcon } from '@heroicons/vue/20/solid'
+import TransactionsDetails from './TransactionsDetails.vue'
 import Erro from '@/assets/erro.svg'
 import Andamento from '@/assets/emAndamento.svg'
 export default {
@@ -110,6 +112,7 @@ export default {
     DisclosurePanel,
     ChevronUpIcon,
     ArrowLongRightIcon,
+    TransactionsDetails
   },
   props: {
     origin: {
@@ -146,50 +149,49 @@ export default {
       imageClass: "",
       myMessage: "",
       mySubtitle: "",
-      Erro,
-      Andamento
+      logos: {
+        "s3": require("@/assets/auth/s3-white.svg"),
+        "google": require("@/assets/auth/google.svg")
+      },
+      statusHandler: {
+        "Em andamento": this.setToEmAndamento,
+        "Erro": this.setToErro,
+        "Concluido": this.setToConcluido
+      },
+      details: {
+        show: false,
+        transaction: null
+      }
     };
   },
   watch: {
     status: function () {
-      this.updateClass();
+      this.statusHandler[this.status]();
     },
   },
   mounted() {
-    if (this.origin === "s3") {
-      this.myOrigin = require("@/assets/auth/s3-white.svg");
-    } else {
-      this.myOrigin = require("@/assets/auth/Google.svg");
-    }
-    if (this.destiny === "google") {
-      this.myDestiny = require("@/assets/auth/Google.svg");
-    } else {
-      this.myDestiny = require("@/assets/auth/s3-white.svg");
-    }
-    this.updateClass();
-    console.log(this.transactions)
+    this.myOrigin = this.logos[this.origin];
+    this.myDestiny = this.logos[this.destiny];
+
+    this.statusHandler[this.status]();
   },
   methods: {
-    updateClass() {
-      if (this.status === "Concluido") {
-        this.myClass =
-          "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100 card-concluido";
-      } else if (this.status === "Erro") {
-        this.myClass =
-          "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100  card-falha";
-        this.myImage = Erro;
-        this.imageClass = "w-[400px]"
-        this.myMessage = "OOPS..."
-        this.mySubtitle = "Parece que houve algum erro de conexão!"
-      } else {
-        this.myClass =
-          "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100  card-andamento";
-
-        this.myImage = Andamento;
-        this.imageClass = "w-[300px]"
-        this.myMessage = "Sua transferência está em andamento"
-        this.mySubtitle = "chegará uma notificação quando estiver tudo pronto :)"
-      }
+    setToEmAndamento() {
+      this.myClass = "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100 card-andamento";
+      this.myImage = Andamento;
+      this.imageClass = "w-[300px]";
+      this.myMessage = "Sua transferência está em andamento";
+      this.mySubtitle = "chegará uma notificação quando estiver tudo pronto :)";
+    },
+    setToErro() {
+      this.myClass = "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100 card-falha";
+      this.myImage = Erro;
+      this.imageClass = "w-[400px]";
+      this.myMessage = "OOPS...";
+      this.mySubtitle = "Parece que houve algum erro de conexão!";
+    },
+    setToConcluido() {
+      this.myClass = "flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium items-center bg-white-100 card-concluido";
     },
   }
 }

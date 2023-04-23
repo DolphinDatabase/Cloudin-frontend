@@ -5,6 +5,8 @@
     :show-button="true"
     @clickPageButton="showCollapse = true"
   >
+    <!-- <TransactionsDetails title="Transacao 1" create-date="2023-01-01" status="Em Andamento" :files="this.files"/> -->
+
     <div
       v-if="transactions.length <= 0 && !showCollapse"
       class="flex justify-center items-center flex-col"
@@ -59,7 +61,7 @@ export default {
   },
   computed:{
     ...mapState({
-      config: state => state.data.files
+      config: state => state.files
     })
   },
   watch:{
@@ -77,10 +79,20 @@ export default {
       eventsHandler: {
         newTransaction: this.newTransaction,
       },
+      files: [
+        {
+          name: "teste",
+          size: 15584115
+        },
+        {
+          name: "teste 123",
+          size: 1231
+        }
+      ]
     }
   },
   created() {
-    this.transactions = this.$store.getters.getConfigs
+    this.transactions = this.$store.getters.configs
   },
   methods: {
     newTransaction(payload) {
@@ -97,7 +109,6 @@ export default {
             }
           }
         })
-
     },
     newTransactionStatus(data) {
       if (data.status == "Erro") {
@@ -106,7 +117,6 @@ export default {
         notify({ title: "Transferência concluída", text: "Todos os arquivos transferidos", icon: "concluido" })
       }
       this.transactions[this.transactions.length - 1] = data
-
     }
   }
 }
