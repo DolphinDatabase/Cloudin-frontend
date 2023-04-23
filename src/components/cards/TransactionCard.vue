@@ -30,7 +30,7 @@
         />
       </DisclosureButton>
       <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-white-100">
-        <div>
+        <div v-if="transactions.length>0">
           <p>Criado: {{ created }}</p>
           <br>
           <div class=" border rounded-lg">
@@ -73,7 +73,7 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-900">
-                      {{ t.created }}
+                      {{ new Date(t.created).toLocaleDateString('pt-BR') }}
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
@@ -91,6 +91,7 @@
             </table>
           </div>
         </div>
+        <h5 v-else>Nenhuma transação realizada</h5>
       </DisclosurePanel>
     </Disclosure>
   </div>
