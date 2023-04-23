@@ -4,18 +4,23 @@ import api from '@/services/api'
 const store = createStore({
   state() {
     return {
-      id: null,
-      googleToken: null,
-      s3Token: null,
-      files: []
+      data: {
+        google:null,
+        google_access:null,
+        s3:null,
+        files: []
+      }
     }
   },
   getters: {
     id(state){
       return state.id;
     },
-    googleToken(state){
-      return state.googleToken;
+    getGoogleAccessToken(state) {
+      return state.data.google_access
+    },
+    getS3Token(state){
+      return state.data.s3
     },
     s3Token(state){
       return state.s3Token;
@@ -26,10 +31,13 @@ const store = createStore({
   },
   mutations: {
     setGoogleToken (state, token) {
-      state.googleToken = token;
+      state.data.google = token
+    },
+    setGoogleAccessToken (state, token) {
+      state.data.google_access = token
     },
     setS3Token (state, token) {
-      state.s3Token = token;
+      state.data.s3 = token
     },
     setFiles(state,data){
       state.files = data
@@ -56,6 +64,9 @@ const store = createStore({
   actions: {
     updateGoogleToken (context, token) {
       context.commit('setGoogleToken', token)
+    },
+    updateGoogleAccessToken (context, token) {
+      context.commit('setGoogleAccessToken', token)
     },
     updateS3Token (context, token) {
       context.commit('setS3Token', token)

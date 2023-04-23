@@ -2,50 +2,69 @@
   <div class="w-[100%] mb-6">
     <Disclosure v-slot="{ open }">
       <DisclosureButton
-        class="shadow flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium">
+        class="shadow flex w-full justify-between rounded-lg px-4 py-2 text-gray-200 text-left text-sm font-medium"
+      >
         <div class="flex gap-2 items-center">
           <ExclamationCircleIcon class="h-5 w-5" />
-          <p class="font-bold">Preencha os campos cuidadosamente</p>
+          <p class="font-bold">
+            Preencha os campos cuidadosamente
+          </p>
         </div>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-black" />
+        <ChevronUpIcon
+          :class="open ? 'rotate-180 transform' : ''"
+          class="h-5 w-5 text-black"
+        />
       </DisclosureButton>
       <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-gray-100">
         <div class="flex justify-between mb-2">
           <div>
             <p>De:</p>
-            <DropDown :list="[{ nome: 'Google' }, { nome: 'S3' }]" @onSelect="(e) => { origin = e }" />
+            <DropDown
+              :list="[{ nome: 'Google' }, { nome: 'S3' }]"
+              @onSelect="(e) => { origin = e }"
+            />
           </div>
           <ArrowSmallRightIcon />
           <div>
             <p>Para:</p>
-            <DropDown :list="[{ nome: 'Google' }, { nome: 'S3' }]" @onSelect="(e) => { destiny = e }" />
+            <DropDown
+              :list="[{ nome: 'Google' }, { nome: 'S3' }]"
+              @on-select="(e) => { destiny = e }"
+            />
           </div>
         </div>
         <div class="flex justify-center">
-          <button class="bg-green-500 text-white-100 py-2 px-4 rounded flex gap-2" @click="chooseFiles()">
-            <DocumentMagnifyingGlassIcon class="w-5 h-5"/>
+          <button
+            class="bg-green-500 text-white-100 py-2 px-4 rounded flex gap-2"
+            @click="chooseFolderOrigin()"
+          >
+            <DocumentMagnifyingGlassIcon class="w-5 h-5" />
             Escolher arquivos
           </button>
         </div>
       </DisclosurePanel>
     </Disclosure>
-    <!-- <img src="@/assets/emAndamento.svg">
-    <img src="@/assets/erro.svg"> -->
   </div>
-  <ModalComponent title="Selecione Arquivos para a transferência" :open="modal" @closeModal="() => { modal = false }"
-    @submitData="() => { submitTransaction() }">
-    <TableCheck ref="table" :data="this.files" />
+  <ModalComponent :open="modal">
+    <TableFolder
+      ref="table"
+      :origin="origin"
+      :destiny="destiny"
+      :origin-data="foldersOrigin"
+      :destiny-data="foldersDestiny"
+      @close-modal="() => { modal = false }"
+      @submit-data="() => {submitTransaction()}"
+    />
   </ModalComponent>
 </template>
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import ModalComponent from '@/components/Modal.vue'
-import { ChevronUpIcon,  } from '@heroicons/vue/20/solid'
+import { ChevronUpIcon, } from '@heroicons/vue/20/solid'
 import { ExclamationCircleIcon, DocumentMagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import DropDown from '@/components/Dropdown.vue'
 import api from '@/services/api'
-import TableCheck from '@/components/tables/TableCheck.vue'
-
+import TableFolder from '../tables/TableFolder.vue'
 export default {
   name: "CardCollapseNew",
   components: {
@@ -55,10 +74,11 @@ export default {
     ChevronUpIcon,
     DropDown,
     ModalComponent,
-    TableCheck,
     ExclamationCircleIcon,
-    DocumentMagnifyingGlassIcon
+    DocumentMagnifyingGlassIcon,
+    TableFolder
   },
+  emits: ["newTransaction", "updateStatus"],
   data() {
     return {
       origin: '',
@@ -66,45 +86,41 @@ export default {
       status: '',
       modal: false,
       selected: [],
-      files: [],
+      foldersOrigin: [],
+      foldersDestiny: [],
       showDataDiv: true,
-      tokenHandler: {
-        "google": () => { return this.$store.getters.googleToken },
-        "s3": () => { return this.$store.getters.s3Token },
-      }
+      originToken: null,
+      destinyToken: null
     }
   },
-  emits: ["newTransaction", "updateStatus"],
   methods: {
-    submitTransaction() {
+    async submitTransaction() {
       this.modal = false
-      var selected = []
-      this.$refs.table.selected.forEach(file => {
-        let s = this.files.filter(
-          (f) => { return f.id == file }
-        )
-        selected.push({ file_id: s[0].id, file_name: s[0].name })
-      });
+      this.selectedOrigin = this.$refs.table.selectedOrigin
+      this.selectedDestiny = this.$refs.table.selectedDestiny
 
-      var data = {
+      let data = {
         origin: this.origin,
         destiny: this.destiny,
-        files: selected
+        originFolder: this.selectedOrigin,
+        destinyFolder: this.selectedDestiny,
+        originToken: this.originToken,
+        destinyToken: this.destinyToken
       }
-
-      var headers = {
-        headers: {
-          origin_token: this.tokenHandler[this.origin](),
-          destiny_token: this.tokenHandler[this.destiny](),
-          application: this.$store.getters.id
-        }
-      }
-
-      this.$emit("newTransaction",{ origin:this.origin, destiny:this.destiny, status:"Em andamento", data: data, headers: headers })
+      await api.post("/config/", data)
+      this.$store.dispatch("fetchConfig")
     },
-    
-    listFiles() {
-      api.get("/" + this.origin + "/list", {
+    async listFoldersOrigin() {
+      let tk = ""
+      if (this.origin == "google") {
+        tk += this.$store.getters.getGoogleAccessToken
+        this.originToken = this.$store.getters.getGoogleToken
+      } else if (this.origin == "s3") {
+        let s3Auth = this.$store.getters.getS3Token
+        tk += `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
+        this.originToken = tk
+      }
+      const res = await api.get("/" + this.origin + "/list/folder", {
         headers: {
           token: this.tokenHandler[this.origin]()
         }
@@ -112,14 +128,36 @@ export default {
         this.files = res.data.result
         this.modal = true
       })
-    },
 
-    chooseFiles() {
+      this.foldersOrigin = res.data.result
+      this.modal = true
+    },
+    chooseFolderOrigin() {
       if (!this.origin || !this.destiny) {
         console.error("no drives selected")
       } else {
-        this.listFiles()
+        this.listFoldersOrigin()
+        this.listFoldersDestiny()
       }
+    },
+    async listFoldersDestiny() {
+      let tk = ""
+      if (this.destiny == "google") {
+        tk += this.$store.getters.getGoogleAccessToken
+        this.destinyToken = this.$store.getters.getGoogleToken
+      } else if (this.destiny == "s3") {
+        let s3Auth = this.$store.getters.getS3Token
+        tk += `${s3Auth.awsAccessKeyId} ${s3Auth.awsSecretAccessKey} ${s3Auth.awsRegionName} ${s3Auth.s3BucketName}`
+        this.destinyToken = tk
+      }
+      const res = await api.get("/" + this.destiny + "/list/folder", {
+        headers: {
+          token: tk
+        }
+      })
+
+      this.foldersDestiny = res.data.result
+      this.modal = true
     }
   }
 }
