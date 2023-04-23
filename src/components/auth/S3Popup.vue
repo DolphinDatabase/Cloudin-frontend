@@ -99,6 +99,7 @@ export default {
   top: 10%;
   left: 25%;
   width: 50%;
+  height: 68%;
   row-gap: 15px;
   align-items: stretch;
 }

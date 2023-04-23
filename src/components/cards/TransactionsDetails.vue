@@ -33,6 +33,12 @@
                         >
                             Tamanho
                         </th>
+                        <th
+                            scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                        >
+                            Tempo
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200 overflow-auto">
@@ -51,6 +57,15 @@
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">
                                         {{ this.convertBytesSizeToHumanReadable(file.size) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ file.time }}
                                     </div>
                                 </div>
                             </div>
