@@ -49,7 +49,7 @@
 </template>
 <!-- " -->
 <script>
-import { Cog6ToothIcon, ArrowsRightLeftIcon } from '@heroicons/vue/24/solid';
+import { ChartBarIcon,Cog6ToothIcon, ArrowsRightLeftIcon } from '@heroicons/vue/24/solid';
 export default {
   name: 'NavigationBar',
   components: {
@@ -68,6 +68,11 @@ export default {
           href: '/transferencia',
           label: 'Transferências',
           icon: ArrowsRightLeftIcon
+        },
+        {
+          href: '/dashboard',
+          label: 'Dashboard',
+          icon: ChartBarIcon
         },
       ]
     }
