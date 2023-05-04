@@ -1,7 +1,7 @@
 <template>
     <div id="dashboard">
       <div class="iframe-container">
-        <iframe title="Report Section" src="https://app.powerbi.com/view?r=eyJrIjoiMWUyOTk2YjQtYTRhNy00ZGVmLWI1OGQtZjMyZGM4MDIyOTg4IiwidCI6IjM0YzA5YmM0LTVmYjQtNDc2Zi05NGVjLTYxMDcwZWE1MDE3OSJ9" frameborder="0" allowFullScreen="true"></iframe>
+        <iframe title="Report Section" src="https://app.powerbi.com/view?r=eyJrIjoiZGQ1ZWVlY2UtYTFiOC00NDcyLWJjNmYtNTFhZjU2OTM3NjVkIiwidCI6IjM0YzA5YmM0LTVmYjQtNDc2Zi05NGVjLTYxMDcwZWE1MDE3OSJ9" frameborder="0" allowFullScreen="true"></iframe>
       </div>
     </div>
   </template>
