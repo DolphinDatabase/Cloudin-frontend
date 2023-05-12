@@ -86,6 +86,6 @@ export default {
 }
 
 span {
-  margin-right: 50px;
+  margin-right: 80px;
 }
 </style>
