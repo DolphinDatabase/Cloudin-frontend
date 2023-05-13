@@ -1,21 +1,10 @@
 <template>
-  <BasePage
-    title="Transferências"
-    info="Realize suas transferências e analise os metadados"
-    :show-button="true"
-    @clickPageButton="showCollapse = true"
-  >
+  <BasePage title="Transferências" info="Realize suas transferências e analise os metadados" :show-button="true"
+    @clickPageButton="showCollapse = true">
     <!-- <TransactionsDetails title="Transacao 1" create-date="2023-01-01" status="Em Andamento" :files="this.files"/> -->
 
-    <div
-      v-if="transactions.length <= 0 && !showCollapse"
-      class="flex justify-center items-center flex-col"
-    >
-      <img
-        src="@/assets/adicionar.svg"
-        alt=""
-        class="w-[680px]"
-      >
+    <div v-if="transactions.length <= 0 && !showCollapse" class="flex justify-center items-center flex-col">
+      <img src="@/assets/adicionar.svg" alt="" class="w-[680px]">
       <div class="mt-8 justify-center flex">
         <p class="lg:text-base text-sm">
           Não encontramos nenhuma transferência, clique no botão <span>adicionar</span> para começar!
@@ -30,16 +19,25 @@
     </div>
 
     <div>
-      <TransactionCard
-        v-for="t in transactions"
-        :key="t.id"
-        :destiny="t.destiny"
-        :origin="t.origin"
-        :status="(t.transaction.length>0)?t.transaction[t.transaction.length-1].status:'Concluido'"
-        :destiny-folder="t.destinyFolder"
-        :origin-folder="t.originFolder"
-        :transactions="t.transaction"
-      />
+      <div>
+
+        <label>Status:</label>
+        <select v-model="transferStatus" @change="filterTransactions()">
+          <option value="" default>Todos</option>
+          <option value="Concluido">Concluído</option>
+          <option value="Em andamento">Em andamento</option>
+          <option value="Erro">Erro</option>
+        </select>
+
+        <ul>
+          <li v-for="transfer in filteredTransferList" :key="transfer.id">
+            {{ transfer.status }} - {{ transfer.name }}
+          </li>
+        </ul>
+      </div>
+      <TransactionCard v-for="t in filtered" :key="t.id" :destiny="t.destiny" :origin="t.origin"
+        :status="(t.transaction.length > 0) ? t.transaction[t.transaction.length - 1].status : 'Concluido'"
+        :destiny-folder="t.destinyFolder" :origin-folder="t.originFolder" :transactions="t.transaction" />
     </div>
   </BasePage>
 </template>
@@ -57,17 +55,17 @@ export default {
   components: {
     BasePage,
     CardCollapseNew,
-    TransactionCard,
+    TransactionCard
   },
-  computed:{
+  computed: {
     ...mapState({
       config: state => state.data.files
     })
   },
-  watch:{
-    'config':{
-      deep:true,
-      handler(data){
+  watch: {
+    'config': {
+      deep: true,
+      handler(data) {
         console.log(data)
         this.transactions = data
       }
@@ -75,6 +73,8 @@ export default {
   },
   data() {
     return {
+      transferStatus: "",
+      filtered: [],
       transactions: [],
       showCollapse: false,
       eventsHandler: {
@@ -94,8 +94,21 @@ export default {
   },
   created() {
     this.transactions = this.$store.getters.configs
+    this.filtered = this.transactions
   },
   methods: {
+    filterTransactions() {
+      if (this.transferStatus == "") {
+        this.filtered = this.transactions
+      } else {
+        this.filtered = []
+        this.transactions.forEach(trn => {
+          if (trn.transaction[trn.transaction.length - 1].status == this.transferStatus) {
+            this.filtered.push(trn)
+          }
+        })
+      }
+    },
     newTransaction(payload) {
       this.transactions.push(payload);
       this.showCollapse = false;
