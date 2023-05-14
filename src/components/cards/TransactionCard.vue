@@ -20,10 +20,10 @@
             alt=""
             class="h-18 w-18"
           >
+          <p class="font-bold text-gray-500">
+            Para: {{ destinyFolder }}
+          </p>
         </div>
-        <p class="font-bold text-gray-500">
-          Para: {{ destinyFolder }}
-        </p>
         <ChevronUpIcon
           :class="open ? 'rotate-180 transform' : ''"
           class="h-5 w-5 text-black"

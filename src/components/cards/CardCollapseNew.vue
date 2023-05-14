@@ -39,7 +39,7 @@
             @click="chooseFolderOrigin()"
           >
             <DocumentMagnifyingGlassIcon class="w-5 h-5" />
-            Escolher arquivos
+            Escolher pastas
           </button>
         </div>
       </DisclosurePanel>
