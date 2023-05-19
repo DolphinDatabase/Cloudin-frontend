@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col">
-    <div class="lg:mt-16 mb-8 font-bold">
+    <div class="font-bold">
       <p class="text-sm md:text-base">
-        Para começar faça sua autenticação
+        Faça sua autenticação
       </p>
     </div>
     <div class="flex flex-wrap">
