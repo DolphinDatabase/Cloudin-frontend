@@ -5,51 +5,75 @@
         Configure suas transferências
       </p>
     </div>
-    <div class="flex flex-col">
-      <div>
-        <card-component>
-          <span>
-            <p class="mr-24">Tempo da pesquisa recorrente </p>
-          </span>
-          <input class="bg-transparent border-b-2 ml-12" type="number" />
-          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg ml-[350px]">OK</button>
-        </card-component>
+    <div class="flex flex-col gap-8">
+      <div class="rounded-md border-slate-200 border shadow ">
+        <div class="grid-container items-center">
+          <p>Tempo de pesquisa recorrente</p>
+          <div class="flex gap-12">
+            <input class="bg-transparent border-b-2" type="number">
+            <select class="bg-transparent border-2 border-slate-200 rounded-md px-4 mr-5">
+              <option>segundos</option>
+              <option>minutos</option>
+              <option>horas</option>
+            </select>
+          </div>
+          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg w-24">
+            OK
+          </button>
+        </div>
       </div>
-      <div>
-        <card-component>
-          <span>
-            <p class="mr-[157px]">Quantidade de banda</p>
-          </span>
-          <input type="range" min="0" max="100" value="100" class="slider ml-12 mr-[27px]" id="myRange" />
-          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg ml-[220px]">OK</button>
-        </card-component>
+      <div class="rounded-md border-slate-200 border shadow ">
+        <div class="grid-container items-center">
+          <p class="mr-9">Quantidade de banda</p>
+          <div class="flex gap-11">
+            <input id="myRange" type="range" min="0" max="100" value="100" class="slider">
+            <label>Valor: 100%</label>
+          </div>
+          <div class="pl-14">
+            <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg w-24">
+              OK
+            </button>
+          </div>
+        </div>
       </div>
-      <div>
-        <card-component>
-          <span>
-            <p class="mr-16">Tempo utilizado nas transferências</p>
-          </span>
-          <input class="bg-transparent border-b-2 ml-12" type="number" />
-          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg ml-[350px]">OK</button>
-        </card-component>
+      <div class="rounded-md border-slate-200 border shadow ">
+        <div class="grid-container items-center">
+          <p class="mr-10">Tempo de transferências</p>
+          <div class="flex gap-12">
+            <input class="bg-transparent border-b-2" type="number">
+            <select class="bg-transparent border-2 border-slate-200 rounded-md px-4 mr-5">
+              <option>segundos</option>
+              <option>minutos</option>
+              <option>horas</option>
+            </select>
+          </div>
+          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg w-24">
+            OK
+          </button>
+        </div>
       </div>
-      <div />
     </div>
+    <div />
   </div>
 </template>
 <script>
-import CardComponent from '@/components/cards/CardComponent.vue'
 export default {
   name: 'SettingsPage',
   components: {
-    CardComponent,
   }
 }
 </script>
 
 <style scoped>
-span {
-  border-right: 2px solid gray;
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 6px;
+  padding: 10px;
+}
+
+.grid-container>div {
+  text-align: center;
 }
 
 .slidecontainer {
@@ -59,7 +83,7 @@ span {
 .slider {
   -webkit-appearance: none;
   margin-top: 8px;
-  width: 30%;
+  width: 55%;
   height: 5px;
   border-radius: 2px;
   background: #d3d3d3;
