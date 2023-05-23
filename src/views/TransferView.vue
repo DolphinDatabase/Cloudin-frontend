@@ -5,8 +5,6 @@
     :show-button="true"
     @clickPageButton="showCollapse = true"
   >
-    <!-- <TransactionsDetails title="Transacao 1" create-date="2023-01-01" status="Em Andamento" :files="this.files"/> -->
-
     <div
       v-if="transactions.length <= 0 && !showCollapse"
       class="flex justify-center items-center flex-col"
@@ -29,39 +27,40 @@
       </div>
     </div>
 
-    <div>
-      <div>
-        <label>Status:</label>
-        <select
-          v-model="transferStatus"
-          @change="filterTransactions()"
+    <div v-if="transactions.length > 0">
+      <label>Status:</label>
+      <select
+        v-model="transferStatus"
+        @change="filterTransactions()"
+      >
+        <option
+          value=""
+          default
         >
-          <option
-            value=""
-            default
-          >
-            Todos
-          </option>
-          <option value="Concluido">
-            Concluído
-          </option>
-          <option value="Em andamento">
-            Em andamento
-          </option>
-          <option value="Erro">
-            Erro
-          </option>
-        </select>
+          Todos
+        </option>
+        <option value="Concluido">
+          Concluído
+        </option>
+        <option value="Em andamento">
+          Em andamento
+        </option>
+        <option value="Erro">
+          Erro
+        </option>
+      </select>
 
-        <ul>
-          <li
-            v-for="transfer in filteredTransferList"
-            :key="transfer.id"
-          >
-            {{ transfer.status }} - {{ transfer.name }}
-          </li>
-        </ul>
-      </div>
+      <ul>
+        <li
+          v-for="transfer in filteredTransferList"
+          :key="transfer.id"
+        >
+          {{ transfer.status }} - {{ transfer.name }}
+        </li>
+      </ul>
+    </div>
+
+    <div>
       <TransactionCard
         v-for="t in filtered"
         :key="t.id"
