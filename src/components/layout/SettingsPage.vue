@@ -9,14 +9,13 @@
       <div class="rounded-md border-slate-200 border shadow ">
         <div class="grid-container items-center">
           <p>Tempo de pesquisa recorrente</p>
-          <div class="flex gap-12">
-            <input class="bg-transparent border-b-2" type="number">
-            <select class="bg-transparent border-2 border-slate-200 rounded-md px-4 mr-5">
-              <option>segundos</option>
-              <option>minutos</option>
-              <option>horas</option>
-            </select>
-          </div>
+          <span class="tracinho"/>
+          <input class="bg-transparent border-b-2" type="number">
+          <select class="bg-transparent border-2 border-slate-200 rounded-md px-4">
+            <option>segundos</option>
+            <option>minutos</option>
+            <option>horas</option>
+          </select>
           <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg w-24">
             OK
           </button>
@@ -24,29 +23,25 @@
       </div>
       <div class="rounded-md border-slate-200 border shadow ">
         <div class="grid-container items-center">
-          <p class="mr-9">Quantidade de banda</p>
-          <div class="flex gap-11">
-            <input id="myRange" type="range" min="0" max="100" value="100" class="slider">
-            <label>Valor: 100%</label>
-          </div>
-          <div class="pl-14">
-            <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg w-24">
-              OK
-            </button>
-          </div>
+          <p>Quantidade de banda</p>
+          <span class="tracinho"/>
+          <input id="myRange" type="range" min="0" max="100" value="100" class="slider">
+          <label>Valor: 100%</label>
+          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg w-24">
+            OK
+          </button>
         </div>
       </div>
       <div class="rounded-md border-slate-200 border shadow ">
         <div class="grid-container items-center">
-          <p class="mr-10">Tempo de transferências</p>
-          <div class="flex gap-12">
-            <input class="bg-transparent border-b-2" type="number">
-            <select class="bg-transparent border-2 border-slate-200 rounded-md px-4 mr-5">
-              <option>segundos</option>
-              <option>minutos</option>
-              <option>horas</option>
-            </select>
-          </div>
+          <p class="">Tempo de transferências</p>
+          <span class="tracinho"/>
+          <input class="bg-transparent border-b-2" type="number">
+          <select class="bg-transparent border-2 border-slate-200 rounded-md px-4">
+            <option>segundos</option>
+            <option>minutos</option>
+            <option>horas</option>
+          </select>
           <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg w-24">
             OK
           </button>
@@ -67,13 +62,29 @@ export default {
 <style scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: 2fr 1fr 2fr 2fr 1fr;
   gap: 6px;
   padding: 10px;
 }
 
-.grid-container>div {
+.grid-container * {
   text-align: center;
+  justify-self: start;
+}
+
+.grid-container p {
+  padding-left: 24px;
+}
+
+.tracinho {
+  border-right: solid 2px gray;
+  width: 45%;
+  height: 100%;
+}
+
+.grid-container input {
+  width: 80%;
+  justify-self: center;
 }
 
 .slidecontainer {
@@ -83,7 +94,6 @@ export default {
 .slider {
   -webkit-appearance: none;
   margin-top: 8px;
-  width: 55%;
   height: 5px;
   border-radius: 2px;
   background: #d3d3d3;
