@@ -11,8 +11,8 @@
           <span>
             <p class="mr-24">Tempo da pesquisa recorrente </p>
           </span>
-          <input class="bg-transparent border-b-2 ml-12" type="number" />
-          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg ml-[350px]">OK</button>
+          <input class="bg-transparent border-b-2 ml-12"  v-model="this.tempoRecorrente" type="number" />
+          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg ml-[350px]" @click="setTempoRecorrente()">OK</button>
         </card-component>
       </div>
       <div>
@@ -20,7 +20,7 @@
           <span>
             <p class="mr-[157px]">Quantidade de banda</p>
           </span>
-          <input type="range" min="0" max="100" value="100" class="slider ml-12 mr-[27px]" id="myRange" />
+          <input type="range" min="0" max="100"  class="slider ml-12 mr-[27px]" id="myRange" />
           <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg ml-[220px]">OK</button>
         </card-component>
       </div>
@@ -39,10 +39,25 @@
 </template>
 <script>
 import CardComponent from '@/components/cards/CardComponent.vue'
+import api from '@/services/api'
 export default {
   name: 'SettingsPage',
   components: {
     CardComponent,
+  },
+  async created(){
+    const res = await api.get("/job")
+    this.tempoRecorrente = res.data.job
+  },
+  data(){
+    return{
+      tempoRecorrente:""
+    }
+  },
+  methods:{
+    setTempoRecorrente(){
+      api.post("/job",{"job":this.tempoRecorrente})
+    }
   }
 }
 </script>
