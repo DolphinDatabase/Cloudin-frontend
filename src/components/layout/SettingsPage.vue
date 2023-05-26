@@ -5,36 +5,72 @@
         Configure suas transferências
       </p>
     </div>
-    <div class="flex flex-col">
-      <div>
-        <card-component>
-          <span>
-            <p class="mr-24">Tempo da pesquisa recorrente </p>
-          </span>
-          <input class="bg-transparent border-b-2 ml-12"  v-model="this.tempoRecorrente" type="number" />
-          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg ml-[350px]" @click="setTempoRecorrente()">OK</button>
-        </card-component>
-      </div>
-      <div>
-        <card-component>
-          <span>
-            <p class="mr-[157px]">Quantidade de banda</p>
-          </span>
-          <input type="range" min="0" max="100"  class="slider ml-12 mr-[27px]" id="myRange" />
-          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg ml-[220px]">OK</button>
-        </card-component>
-      </div>
+    <div class="flex flex-col gap-8">
       <div class="rounded-md border-slate-200 border shadow ">
         <div class="grid-container items-center">
-          <p class="">Tempo de transferências</p>
-          <span class="tracinho"/>
-          <input class="bg-transparent border-b-2" type="number">
+          <p>
+            Tempo da pesquisa recorrente
+          </p>
+          <span class="tracinho" />
+          <input
+            v-model="tempoRecorrente"
+            class="bg-transparent border-b-2"
+            type="number"
+          >
           <select class="bg-transparent border-2 border-slate-200 rounded-md px-4">
             <option>segundos</option>
             <option>minutos</option>
             <option>horas</option>
           </select>
-          <button type="button" class="bg-green-500 px-5 text-white-100 rounded-lg w-24">
+          <button
+            type="button"
+            class="bg-green-500 px-5 text-white-100 rounded-lg w-24"
+            @click="setTempoRecorrente()"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+      <div class="rounded-md border-slate-200 border shadow ">
+        <div class="grid-container items-center">
+          <p>Quantidade de banda</p>
+          <span class="tracinho" />
+          <input
+            id="myRange"
+            type="range"
+            min="0"
+            max="100"
+            value="100"
+            class="slider"
+          >
+          <label>Valor: 100%</label>
+          <button
+            type="button"
+            class="bg-green-500 px-5 text-white-100 rounded-lg w-24"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+      <div class="rounded-md border-slate-200 border shadow ">
+        <div class="grid-container items-center">
+          <p class="">
+            Tempo de transferências
+          </p>
+          <span class="tracinho" />
+          <input
+            class="bg-transparent border-b-2"
+            type="number"
+          >
+          <select class="bg-transparent border-2 border-slate-200 rounded-md px-4">
+            <option>segundos</option>
+            <option>minutos</option>
+            <option>horas</option>
+          </select>
+          <button
+            type="button"
+            class="bg-green-500 px-5 text-white-100 rounded-lg w-24"
+          >
             OK
           </button>
         </div>
@@ -44,25 +80,21 @@
   </div>
 </template>
 <script>
-import CardComponent from '@/components/cards/CardComponent.vue'
 import api from '@/services/api'
 export default {
   name: 'SettingsPage',
-  components: {
-    CardComponent,
+  data() {
+    return {
+      tempoRecorrente: ""
+    }
   },
-  async created(){
+  async created() {
     const res = await api.get("/job")
     this.tempoRecorrente = res.data.job
   },
-  data(){
-    return{
-      tempoRecorrente:""
-    }
-  },
-  methods:{
-    setTempoRecorrente(){
-      api.post("/job",{"job":this.tempoRecorrente})
+  methods: {
+    setTempoRecorrente() {
+      api.post("/job", { "job": this.tempoRecorrente })
     }
   }
 }
