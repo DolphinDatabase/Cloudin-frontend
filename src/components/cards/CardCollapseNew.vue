@@ -17,22 +17,12 @@
       </DisclosureButton>
       <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-gray-100">
         <div class="flex justify-between mb-2">
-          <div>
-            <p>De:</p>
-            <DropDown
-              :list="[{ nome: 'Google' }, { nome: 'S3' }]"
-              @onSelect="(e) => { origin = e }"
-            />
-          </div>
-          <ArrowSmallRightIcon />
-          <div>
-            <p>Para:</p>
-            <DropDown
-              :list="[{ nome: 'Google' }, { nome: 'S3' }]"
-              @on-select="(e) => { destiny = e }"
-            />
-          </div>
+          
+          <DropDown @origin-updated="onOriginUpdated" @destiny-updated="onDestinyUpdated" />
+
+
         </div>
+
         <div class="flex justify-center">
           <button
             class="bg-green-500 text-white-100 py-2 px-4 rounded flex gap-2"
@@ -98,6 +88,18 @@ export default {
     }
   },
   methods: {
+    
+    onOriginUpdated(updatedOrigin) {
+      this.origin = updatedOrigin; // Atualizar origin no componente pai
+      console.log("origin");
+      console.log(this.origin);
+    },
+    onDestinyUpdated(updatedDestiny) {
+      this.destiny = updatedDestiny; // Atualizar destiny no componente pai
+      console.log("destiny");
+      console.log(this.destiny);
+    },
+
     async submitTransaction() {
       this.modal = false
       this.selectedOrigin = this.$refs.table.selectedOrigin
