@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <div class="font-bold">
-      <p class="text-sm md:text-base">
+      <p class="text-sm md:text-base mb-4">
         Configure suas transferências
       </p>
     </div>
@@ -17,10 +17,22 @@
             class="bg-transparent border-b-2"
             type="number"
           >
-          <select class="bg-transparent border-2 border-slate-200 rounded-md px-4">
-            <option>segundos</option>
-            <option>minutos</option>
-            <option>horas</option>
+          <select
+            v-model="selectedTimeSearch"
+            class="bg-transparent border-2 border-slate-200 rounded-md px-4"
+          >
+            <option
+              value=""
+              disabled
+            >
+              Selecione uma opção
+            </option>
+            <option
+              v-for="time in times"
+              :key="time.id"
+            >
+              {{ time.tempo }}
+            </option>
           </select>
           <button
             type="button"
@@ -36,17 +48,17 @@
           <p>Quantidade de banda</p>
           <span class="tracinho" />
           <input
-            id="myRange"
+            v-model="sliderValue"
             type="range"
             min="0"
             max="100"
-            value="100"
             class="slider"
           >
-          <label>Valor: 100%</label>
+          <label>{{ valueLabel }}</label>
           <button
             type="button"
             class="bg-green-500 px-5 text-white-100 rounded-lg w-24"
+            @click="setBanda()"
           >
             OK
           </button>
@@ -62,14 +74,27 @@
             class="bg-transparent border-b-2"
             type="number"
           >
-          <select class="bg-transparent border-2 border-slate-200 rounded-md px-4">
-            <option>segundos</option>
-            <option>minutos</option>
-            <option>horas</option>
+          <select
+            v-model="selectedTimeTransfer"
+            class="bg-transparent border-2 border-slate-200 rounded-md px-4"
+          >
+            <option
+              value=""
+              disabled
+            >
+              Selecione uma opção
+            </option>
+            <option
+              v-for="time in times"
+              :key="time.id"
+            >
+              {{ time.tempo }}
+            </option>
           </select>
           <button
             type="button"
             class="bg-green-500 px-5 text-white-100 rounded-lg w-24"
+            @click="setTempoTransfer()"
           >
             OK
           </button>
@@ -85,7 +110,21 @@ export default {
   name: 'SettingsPage',
   data() {
     return {
-      tempoRecorrente: ""
+      tempoRecorrente: '',
+      selectedTimeSearch: '',
+      selectedTimeTransfer:'',
+      times: [
+        {id: 1, tempo: 'segundos'},
+        {id: 3, tempo: 'minutos'},
+        {id: 4, tempo: 'horas'},
+      ],
+      sliderValue: '100'
+    }
+  },
+  computed: {
+    valueLabel() {
+      const percentage = Math.round((this.sliderValue / 100) * 100)
+      return `Valor: ${percentage}%`;
     }
   },
   async created() {
@@ -94,7 +133,34 @@ export default {
   },
   methods: {
     setTempoRecorrente() {
-      api.post("/job", { "job": this.tempoRecorrente })
+      let tempo = 0;
+      if (this.selectedTimeSearch == 'segundos'){
+        tempo = this.tempoRecorrente
+      } else if (this.selectedTimeSearch == 'minutos'){
+        tempo = this.tempoRecorrente * 60
+      } else if (this.selectedTimeSearch == 'horas'){
+        tempo = this.tempoRecorrente *  3.600
+      } else {
+        alert('Selecione uma opção válida');
+      } 
+      api.post("/job", { "job": tempo })
+    },
+    setTempoTransfer() {
+      let tempo = 0;
+      if (this.selectedTimeTransfer == 'segundos'){
+        tempo = this.tempoRecorrente
+      } else if (this.selectedTimeTransfer == 'minutos'){
+        tempo = this.tempoRecorrente * 60
+      } else if (this.selectedTimeTransfer == 'horas'){
+        tempo = this.tempoRecorrente *  3.600
+      } else {
+        alert('Selecione uma opção válida');
+      } 
+      
+      console.log(tempo)
+    },
+    setBanda() {
+      console.log(this.sliderValue)
     }
   }
 }
