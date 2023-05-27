@@ -130,35 +130,60 @@ export default {
   async created() {
     const res = await api.get("/job")
     this.tempoRecorrente = res.data.job
+
+    
+
+  },
+  mounted() {
+    const storedTimeSearch = localStorage.getItem('selectedTimeSearch')
+    if (this.selectedTimeSearch) {
+        this.selectedTimeSearch = storedTimeSearch
+      } else {
+        this.selectedTimeSearch = 'segundos'
+      }
+    const storedTimeTransfer = localStorage.getItem('selectedTimeTransfer')
+    if (this.selectedTimeTransfer) {
+        this.selectedTimeTransfer = storedTimeTransfer
+      } else {
+        this.selectedTimeTransfer = 'segundos'
+      }
   },
   methods: {
     setTempoRecorrente() {
       let tempo = 0;
       if (this.selectedTimeSearch == 'segundos'){
         tempo = this.tempoRecorrente
+        alert('Configuração de pesquisa recorrente em segundos concluída')
       } else if (this.selectedTimeSearch == 'minutos'){
-        tempo = this.tempoRecorrente * 60
+        tempo = this.tempoRecorrente / 60
+        alert('Configuração de pesquisa recorrente em minutos concluída')
       } else if (this.selectedTimeSearch == 'horas'){
-        tempo = this.tempoRecorrente *  3.600
+        tempo = this.tempoRecorrente /  3.600
+        alert('Configuração de pesquisa recorrente em horas concluída')
       } else {
         alert('Selecione uma opção válida');
       } 
-      
+
       api.post("/job", { "job": tempo })
+      localStorage.setItem('selectedTimeSearch', this.selectedTimeSearch);
     },
     setTempoTransfer() {
       let tempo = 0;
       if (this.selectedTimeTransfer == 'segundos'){
         tempo = this.tempoRecorrente
+        alert('Configuração de tempode de transferências em segundos concluída')
       } else if (this.selectedTimeTransfer == 'minutos'){
         tempo = this.tempoRecorrente * 60
+        alert('Configuração de tempode de transferências em minutos concluída')
       } else if (this.selectedTimeTransfer == 'horas'){
         tempo = this.tempoRecorrente *  3.600
+        alert('Configuração de tempode de transferências em horas concluída')
       } else {
         alert('Selecione uma opção válida');
       } 
       
       console.log(tempo)
+      localStorage.setItem('selectedTimeTransfer', this.selectedTimeTransfer);
     },
     setBanda() {
       console.log(this.sliderValue)
