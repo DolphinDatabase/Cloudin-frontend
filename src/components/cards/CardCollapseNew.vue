@@ -17,10 +17,7 @@
       </DisclosureButton>
       <DisclosurePanel class="px-12 pt-4 pb-4 text-sm bg-gray-100">
         <div class="flex justify-between mb-2">
-          
           <DropDown @origin-updated="onOriginUpdated" @destiny-updated="onDestinyUpdated" />
-
-
         </div>
 
         <div class="flex justify-center">

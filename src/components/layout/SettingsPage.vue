@@ -125,7 +125,7 @@ export default {
     valueLabel() {
       const percentage = Math.round((this.sliderValue / 100) * 100)
       return `Valor: ${percentage}%`;
-    }
+    },
   },
   async created() {
     const res = await api.get("/job")
@@ -143,6 +143,7 @@ export default {
       } else {
         alert('Selecione uma opção válida');
       } 
+      
       api.post("/job", { "job": tempo })
     },
     setTempoTransfer() {
