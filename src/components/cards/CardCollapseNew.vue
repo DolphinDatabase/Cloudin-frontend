@@ -88,13 +88,9 @@ export default {
     
     onOriginUpdated(updatedOrigin) {
       this.origin = updatedOrigin.toLowerCase(); // Atualizar origin no componente pai
-      console.log("origin");
-      console.log(this.origin);
     },
     onDestinyUpdated(updatedDestiny) {
-      this.destiny = updatedDestiny.toLowerCase(); // Atualizar destiny no componente pai
-      console.log("destiny");
-      console.log(this.destiny);
+      this.destiny = updatedDestiny.toLowerCase();; // Atualizar destiny no componente pai
     },
 
     async submitTransaction() {
