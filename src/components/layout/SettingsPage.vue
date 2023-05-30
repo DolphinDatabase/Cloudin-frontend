@@ -111,13 +111,10 @@ export default {
       let tempoTransfer = 0
       if (this.selectedTimeTransfer == 'segundos') {
         tempoTransfer = this.tempoRecorrente
-        alert('Configuração de tempo de de transferências em segundos concluída')
       } else if (this.selectedTimeTransfer == 'minutos') {
         tempoTransfer = this.tempoRecorrente / 60
-        alert('Configuração de tempo de de transferências em minutos concluída')
       } else if (this.selectedTimeTransfer == 'horas') {
         tempoTransfer = this.tempoRecorrente / 3600
-        alert('Configuração de tempo de de transferências em horas concluída')
       }
 
       console.log(tempoTransfer)
