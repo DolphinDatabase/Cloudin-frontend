@@ -12,56 +12,23 @@
             Tempo da pesquisa recorrente
           </p>
           <span class="tracinho" />
-          <input
-            v-model="tempoRecorrente"
-            class="bg-transparent border-b-2"
-            type="number"
-          >
-          <select
-            v-model="selectedTimeSearch"
-            class="bg-transparent border-2 border-slate-200 rounded-md px-4"
-          >
-            <option
-              value=""
-              disabled
-            >
+          <input v-model="config.JOB_TIME" class="bg-transparent border-b-2" type="number">
+          <select v-model="selectedTimeSearch" class="bg-transparent border-2 border-slate-200 rounded-md px-4">
+            <option value="" disabled>
               Selecione uma opção
             </option>
-            <option
-              v-for="time in times"
-              :key="time.id"
-            >
+            <option v-for="time in times" :key="time.id">
               {{ time.tempo }}
             </option>
           </select>
-          <button
-            type="button"
-            class="bg-green-500 px-5 text-white-100 rounded-lg w-24"
-            @click="setTempoRecorrente()"
-          >
-            OK
-          </button>
         </div>
       </div>
       <div class="rounded-md border-slate-200 border shadow ">
         <div class="grid-container items-center">
           <p>Quantidade de banda</p>
           <span class="tracinho" />
-          <input
-            v-model="sliderValue"
-            type="range"
-            min="0"
-            max="100"
-            class="slider"
-          >
+          <input v-model="this.config.BAND" type="range" min="0" max="100" class="slider">
           <label>{{ valueLabel }}</label>
-          <button
-            type="button"
-            class="bg-green-500 px-5 text-white-100 rounded-lg w-24"
-            @click="setBanda()"
-          >
-            OK
-          </button>
         </div>
       </div>
       <div class="rounded-md border-slate-200 border shadow ">
@@ -70,35 +37,21 @@
             Tempo de transferências
           </p>
           <span class="tracinho" />
-          <input
-            class="bg-transparent border-b-2"
-            type="number"
-          >
-          <select
-            v-model="selectedTimeTransfer"
-            class="bg-transparent border-2 border-slate-200 rounded-md px-4"
-          >
-            <option
-              value=""
-              disabled
-            >
+          <input class="bg-transparent border-b-2" type="number">
+          <select v-model="selectedTimeTransfer" class="bg-transparent border-2 border-slate-200 rounded-md px-4">
+            <option value="" disabled>
               Selecione uma opção
             </option>
-            <option
-              v-for="time in times"
-              :key="time.id"
-            >
+            <option v-for="time in times" :key="time.id">
               {{ time.tempo }}
             </option>
           </select>
-          <button
-            type="button"
-            class="bg-green-500 px-5 text-white-100 rounded-lg w-24"
-            @click="setTempoTransfer()"
-          >
-            OK
-          </button>
         </div>
+      </div>
+      <div class="flex">
+        <button type="button" class=" bg-green-500 p-2 text-white-100 rounded-lg w-32" @click="setConfig()">
+          Configurar
+        </button>
       </div>
     </div>
     <div />
@@ -110,83 +63,69 @@ export default {
   name: 'SettingsPage',
   data() {
     return {
-      tempoRecorrente: '',
+      config: '',
       selectedTimeSearch: '',
-      selectedTimeTransfer:'',
+      selectedTimeTransfer: '',
       times: [
-        {id: 1, tempo: 'segundos'},
-        {id: 3, tempo: 'minutos'},
-        {id: 4, tempo: 'horas'},
-      ],
-      sliderValue: '100'
+        { id: 1, tempo: 'segundos' },
+        { id: 3, tempo: 'minutos' },
+        { id: 4, tempo: 'horas' },
+      ]
     }
   },
   computed: {
     valueLabel() {
-      const percentage = Math.round((this.sliderValue / 100) * 100)
+      const percentage = Math.round((this.config.BAND / 100) * 100)
       return `Valor: ${percentage}%`;
     },
   },
   async created() {
     const res = await api.get("/job")
-    this.tempoRecorrente = res.data.job
+    this.config = res.data
 
-    
-
+    const storedTimeSearch = localStorage.getItem('selectedTimeSearch')
+    if (storedTimeSearch == 'minutos') {
+      this.config.JOB_TIME = this.config.JOB_TIME * 60
+    } else if (storedTimeSearch == 'horas') {
+      this.config.JOB_TIME = this.config.JOB_TIME * 3600
+    }
   },
   mounted() {
     const storedTimeSearch = localStorage.getItem('selectedTimeSearch')
-    if (this.selectedTimeSearch) {
-        this.selectedTimeSearch = storedTimeSearch
-      } else {
-        this.selectedTimeSearch = 'segundos'
-      }
+    this.selectedTimeSearch = storedTimeSearch || 'segundos'
+
     const storedTimeTransfer = localStorage.getItem('selectedTimeTransfer')
-    if (this.selectedTimeTransfer) {
-        this.selectedTimeTransfer = storedTimeTransfer
-      } else {
-        this.selectedTimeTransfer = 'segundos'
-      }
+    this.selectedTimeTransfer = storedTimeTransfer || 'segundos'
   },
   methods: {
-    setTempoRecorrente() {
-      let tempo = 0;
-      if (this.selectedTimeSearch == 'segundos'){
-        tempo = this.tempoRecorrente
-        alert('Configuração de pesquisa recorrente em segundos concluída')
-      } else if (this.selectedTimeSearch == 'minutos'){
-        tempo = this.tempoRecorrente / 60
-        alert('Configuração de pesquisa recorrente em minutos concluída')
-      } else if (this.selectedTimeSearch == 'horas'){
-        tempo = this.tempoRecorrente /  3.600
-        alert('Configuração de pesquisa recorrente em horas concluída')
-      } else {
-        alert('Selecione uma opção válida');
-      } 
+    setConfig() {
+      let tempoPesquisa = 0;
+      if (this.selectedTimeSearch == 'segundos') {
+        tempoPesquisa = this.config.JOB_TIME
+      } else if (this.selectedTimeSearch == 'minutos') {
+        tempoPesquisa = this.config.JOB_TIME / 60
+      } else if (this.selectedTimeSearch == 'horas') {
+        tempoPesquisa = this.config.JOB_TIME / 3600
+      }
 
-      api.post("/job", { "job": tempo })
-      localStorage.setItem('selectedTimeSearch', this.selectedTimeSearch);
-    },
-    setTempoTransfer() {
-      let tempo = 0;
-      if (this.selectedTimeTransfer == 'segundos'){
-        tempo = this.tempoRecorrente
-        alert('Configuração de tempode de transferências em segundos concluída')
-      } else if (this.selectedTimeTransfer == 'minutos'){
-        tempo = this.tempoRecorrente * 60
-        alert('Configuração de tempode de transferências em minutos concluída')
-      } else if (this.selectedTimeTransfer == 'horas'){
-        tempo = this.tempoRecorrente *  3.600
-        alert('Configuração de tempode de transferências em horas concluída')
-      } else {
-        alert('Selecione uma opção válida');
-      } 
-      
-      console.log(tempo)
-      localStorage.setItem('selectedTimeTransfer', this.selectedTimeTransfer);
-    },
-    setBanda() {
-      console.log(this.sliderValue)
+      let tempoTransfer = 0
+      if (this.selectedTimeTransfer == 'segundos') {
+        tempoTransfer = this.tempoRecorrente
+        alert('Configuração de tempo de de transferências em segundos concluída')
+      } else if (this.selectedTimeTransfer == 'minutos') {
+        tempoTransfer = this.tempoRecorrente / 60
+        alert('Configuração de tempo de de transferências em minutos concluída')
+      } else if (this.selectedTimeTransfer == 'horas') {
+        tempoTransfer = this.tempoRecorrente / 3600
+        alert('Configuração de tempo de de transferências em horas concluída')
+      }
+
+      console.log(tempoTransfer)
+      alert('Configurações aplicadas com sucesso!')
+
+      api.post("/job", { "job": tempoPesquisa, "band": this.config.BAND })
+      localStorage.setItem('selectedTimeSearch', this.selectedTimeSearch)
+      localStorage.setItem('selectedTimeTransfer', this.selectedTimeTransfer)
     }
   }
 }
@@ -195,7 +134,7 @@ export default {
 <style scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: 2fr 1fr 2fr 2fr 1fr;
+  grid-template-columns: 2fr 1fr 2fr 2fr;
   gap: 6px;
   padding: 10px;
 }
