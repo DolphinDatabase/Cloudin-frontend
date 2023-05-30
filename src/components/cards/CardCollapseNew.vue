@@ -90,7 +90,7 @@ export default {
       this.origin = updatedOrigin.toLowerCase(); // Atualizar origin no componente pai
     },
     onDestinyUpdated(updatedDestiny) {
-      this.destiny = updatedDestiny.toLowerCase();; // Atualizar destiny no componente pai
+      this.destiny = updatedDestiny.toLowerCase(); // Atualizar destiny no componente pai
     },
 
     async submitTransaction() {
