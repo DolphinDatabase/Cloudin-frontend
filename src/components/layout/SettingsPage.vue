@@ -37,7 +37,7 @@
             Tempo de transferências
           </p>
           <span class="tracinho" />
-          <input class="bg-transparent border-b-2" type="number">
+          <input v-model="config.TRANSFER_TIME" class="bg-transparent border-b-2" type="number">
           <select v-model="selectedTimeTransfer" class="bg-transparent border-2 border-slate-200 rounded-md px-4">
             <option value="" disabled>
               Selecione uma opção
@@ -89,6 +89,12 @@ export default {
     } else if (storedTimeSearch == 'horas') {
       this.config.JOB_TIME = this.config.JOB_TIME * 3600
     }
+    const storedTimeTransfer = localStorage.getItem('selectedTimeTransfer')
+    if (storedTimeTransfer == 'minutos') {
+      this.config.TRANSFER_TIME = this.config.TRANSFER_TIME * 60
+    } else if (storedTimeTransfer == 'horas') {
+      this.config.TRANSFER_TIME = this.config.TRANSFER_TIME * 3600
+    }
   },
   mounted() {
     const storedTimeSearch = localStorage.getItem('selectedTimeSearch')
@@ -110,17 +116,17 @@ export default {
 
       let tempoTransfer = 0
       if (this.selectedTimeTransfer == 'segundos') {
-        tempoTransfer = this.tempoRecorrente
+        tempoTransfer = this.config.TRANSFER_TIME
       } else if (this.selectedTimeTransfer == 'minutos') {
-        tempoTransfer = this.tempoRecorrente / 60
+        tempoTransfer = this.config.TRANSFER_TIME / 60
       } else if (this.selectedTimeTransfer == 'horas') {
-        tempoTransfer = this.tempoRecorrente / 3600
+        tempoTransfer = this.config.TRANSFER_TIME / 3600
       }
 
       console.log(tempoTransfer)
       alert('Configurações aplicadas com sucesso!')
 
-      api.post("/job", { "job": tempoPesquisa, "band": this.config.BAND })
+      api.post("/job", { "job": tempoPesquisa, "band": this.config.BAND, "transfer": tempoTransfer })
       localStorage.setItem('selectedTimeSearch', this.selectedTimeSearch)
       localStorage.setItem('selectedTimeTransfer', this.selectedTimeTransfer)
     }
