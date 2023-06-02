@@ -122,6 +122,7 @@ export default {
       handler(data) {
         console.log(data)
         this.transactions = data
+        this.filterTransactions()
       }
     }
   },
@@ -136,7 +137,13 @@ export default {
       } else {
         this.filtered = []
         this.transactions.forEach(trn => {
-          if (trn.transaction[trn.transaction.length - 1].status == this.transferStatus) {
+          let st = ""
+          if(trn.transaction.length<=0){
+            st = "Concluido"
+          }else{
+            st = trn.transaction[trn.transaction.length - 1].status
+          }
+          if (st == this.transferStatus) {
             this.filtered.push(trn)
           }
         })
